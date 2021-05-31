@@ -3,4 +3,4 @@ build:
 	npm run build
 
 start:
-	npm run start
+	npm run start:watch
