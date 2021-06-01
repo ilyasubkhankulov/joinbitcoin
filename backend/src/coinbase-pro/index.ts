@@ -1,4 +1,5 @@
 import CoinbasePro from "coinbase-pro";
+import { test } from "../repo";
 import { COINBASE_PRO_API_PASSPHRASE, COINBASE_PRO_API_KEY, COINBASE_PRO_API_SECRET } from "../secrets";
 
 function getCoinbaseProStatus() {
@@ -23,6 +24,8 @@ function getCoinbaseProStatus() {
         // tslint:disable-next-line:no-console
         console.log(resp)
     });
+
+    test();
 }
 
 export {

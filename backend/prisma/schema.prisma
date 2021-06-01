@@ -1,0 +1,112 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model account {
+  id              String            @id @db.Uuid
+  investor_id     String            @db.Uuid
+  exchange        String            @db.VarChar
+  updated_at      DateTime          @db.Timestamptz(6)
+  created_at      DateTime          @db.Timestamptz(6)
+  investor        investor          @relation(fields: [investor_id], references: [id])
+  account_balance account_balance[]
+  auditlog        auditlog[]
+  plan            plan[]
+  trade           trade[]
+}
+
+model account_balance {
+  id          String    @id @db.Uuid
+  investor_id String?   @db.Uuid
+  account_id  String?   @db.Uuid
+  currency    String    @db.VarChar
+  balance     Decimal   @db.Decimal(1000, 0)
+  updated_at  DateTime  @db.Timestamptz(6)
+  created_at  DateTime  @db.Timestamptz(6)
+  account     account?  @relation(fields: [account_id], references: [id])
+  investor    investor? @relation(fields: [investor_id], references: [id])
+
+  @@index([account_id, currency], name: "unique_account_currency")
+}
+
+model auditlog {
+  id          String          @id @db.Uuid
+  investor_id String?         @db.Uuid
+  account_id  String?         @db.Uuid
+  action      auditlog_action
+  created_at  DateTime        @db.Timestamptz(6)
+  account     account?        @relation(fields: [account_id], references: [id])
+  investor    investor?       @relation(fields: [investor_id], references: [id])
+}
+
+model investor {
+  id              String            @id @db.Uuid
+  email           String?           @db.VarChar
+  updated_at      DateTime          @db.Timestamptz(6)
+  created_at      DateTime          @db.Timestamptz(6)
+  account         account[]
+  account_balance account_balance[]
+  auditlog        auditlog[]
+}
+
+model trade {
+  id               String       @id @db.Uuid
+  plan             String       @db.Uuid
+  account_id       String       @db.Uuid
+  currency_pair    String       @db.VarChar
+  order_type       order_type
+  price            Decimal?     @db.Decimal(1000, 0)
+  quantity         Decimal?     @db.Decimal(1000, 0)
+  trade_status     trade_status
+  exchange         String?      @db.VarChar
+  exchange_status  String?      @db.VarChar
+  updated_at       DateTime     @db.Timestamptz(6)
+  created_at       DateTime     @db.Timestamptz(6)
+  account          account      @relation(fields: [account_id], references: [id])
+  plan_planTotrade plan         @relation(fields: [plan], references: [id])
+}
+
+model plan {
+  id         String      @id @db.Uuid
+  account_id String      @db.Uuid
+  status     plan_status
+  frequency  Int
+  amount     Decimal     @db.Decimal(1000, 0)
+  updated_at DateTime    @db.Timestamptz(6)
+  created_at DateTime    @db.Timestamptz(6)
+  account    account     @relation(fields: [account_id], references: [id])
+  trade      trade[]
+}
+
+enum auditlog_action {
+  create_investor
+  update_investor
+  create_account
+  update_account
+  create_plan
+  update_plan
+}
+
+enum order_type {
+  Market
+  Limit
+}
+
+enum plan_status {
+  Disabled
+  Enabled
+}
+
+enum trade_status {
+  Scheduled
+  Sent
+  Confirmed
+  Canceled
+  Complete
+  Partial
+}
