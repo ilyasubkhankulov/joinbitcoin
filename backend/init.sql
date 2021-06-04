@@ -16,7 +16,18 @@ drop table IF EXISTS auditlog CASCADE;
 
 drop table IF EXISTS plan CASCADE;
 
+
+-- create update function
+CREATE OR REPLACE FUNCTION trigger_set_timestamp()
+RETURNS TRIGGER AS $$
+BEGIN
+  NEW.updated_at = NOW();
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
 -- create schemas
+
 
 create schema IF NOT EXISTS connected ;
 -- create
@@ -52,16 +63,16 @@ CREATE TYPE "auditlog_action" AS ENUM (
 CREATE TABLE "investor" (
   "id" uuid PRIMARY KEY,
   "email" varchar,
-  "updated_at" timestamptz NOT NULL,
-  "created_at" timestamptz NOT NULL
+  "updated_at" timestamptz NOT NULL DEFAULT NOW(),
+  "created_at" timestamptz NOT NULL DEFAULT NOW()
 );
 
 CREATE TABLE "account" (
   "id" uuid PRIMARY KEY,
   "investor_id" uuid NOT NULL,
   "exchange" varchar NOT NULL,
-  "updated_at" timestamptz NOT NULL,
-  "created_at" timestamptz NOT NULL
+  "updated_at" timestamptz NOT NULL DEFAULT NOW(),
+  "created_at" timestamptz NOT NULL DEFAULT NOW()
 );
 
 CREATE TABLE "account_balance" (
@@ -70,8 +81,8 @@ CREATE TABLE "account_balance" (
   "account_id" uuid,
   "currency" varchar NOT NULL,
   "balance" numeric(1000,0) NOT NULL,
-  "updated_at" timestamptz NOT NULL,
-  "created_at" timestamptz NOT NULL
+  "updated_at" timestamptz NOT NULL DEFAULT NOW(),
+  "created_at" timestamptz NOT NULL DEFAULT NOW()
 );
 
 CREATE TABLE connected.coinbasepro (
@@ -80,8 +91,8 @@ CREATE TABLE connected.coinbasepro (
   "nickname" varchar NOT NULL,
   "passphrase" varchar NOT NULL,
   "secret" varchar NOT NULL,
-  "updated_at" timestamptz NOT NULL,
-  "created_at" timestamptz NOT NULL
+  "updated_at" timestamptz NOT NULL DEFAULT NOW(),
+  "created_at" timestamptz NOT NULL DEFAULT NOW()
 );
 
 CREATE TABLE "plan" (
@@ -90,8 +101,8 @@ CREATE TABLE "plan" (
   "status" plan_status NOT NULL,
   "frequency" integer NOT NULL,
   "amount" numeric(1000,0) NOT NULL,
-  "updated_at" timestamptz NOT NULL,
-  "created_at" timestamptz NOT NULL
+  "updated_at" timestamptz NOT NULL DEFAULT NOW(),
+  "created_at" timestamptz NOT NULL DEFAULT NOW()
 );
 
 CREATE TABLE "trade" (
@@ -105,8 +116,8 @@ CREATE TABLE "trade" (
   "trade_status" trade_status NOT NULL,
   "exchange" varchar,
   "exchange_status" varchar,
-  "updated_at" timestamptz NOT NULL,
-  "created_at" timestamptz NOT NULL
+  "updated_at" timestamptz NOT NULL DEFAULT NOW(),
+  "created_at" timestamptz NOT NULL DEFAULT NOW()
 );
 
 CREATE TABLE "auditlog" (
@@ -114,7 +125,7 @@ CREATE TABLE "auditlog" (
   "investor_id" uuid,
   "account_id" uuid,
   "action" auditlog_action NOT NULL,
-  "created_at" timestamptz NOT NULL
+  "created_at" timestamptz NOT NULL DEFAULT NOW()
 );
 
 ALTER TABLE "account" ADD FOREIGN KEY ("investor_id") REFERENCES "investor" ("id");
@@ -142,3 +153,35 @@ CREATE UNIQUE INDEX ON "account_balance" ("id");
 COMMENT ON COLUMN "account"."exchange" IS 'Financial exchange or brokerage';
 
 COMMENT ON COLUMN "plan"."frequency" IS 'in minutes';
+
+-- update triggers
+
+CREATE TRIGGER set_timestamp
+BEFORE UPDATE ON account
+FOR EACH ROW
+EXECUTE PROCEDURE trigger_set_timestamp();
+
+CREATE TRIGGER set_timestamp
+BEFORE UPDATE ON account_balance
+FOR EACH ROW
+EXECUTE PROCEDURE trigger_set_timestamp();
+
+CREATE TRIGGER set_timestamp
+BEFORE UPDATE ON investor
+FOR EACH ROW
+EXECUTE PROCEDURE trigger_set_timestamp();
+
+CREATE TRIGGER set_timestamp
+BEFORE UPDATE ON plan
+FOR EACH ROW
+EXECUTE PROCEDURE trigger_set_timestamp();
+
+CREATE TRIGGER set_timestamp
+BEFORE UPDATE ON trade
+FOR EACH ROW
+EXECUTE PROCEDURE trigger_set_timestamp();
+
+CREATE TRIGGER set_timestamp
+BEFORE UPDATE ON connected.coinbasepro
+FOR EACH ROW
+EXECUTE PROCEDURE trigger_set_timestamp();

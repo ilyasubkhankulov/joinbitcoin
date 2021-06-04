@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client'
+import { uuid } from 'uuidv4';
 
 const prisma = new PrismaClient()
 
@@ -17,17 +18,20 @@ test()
     await prisma.$disconnect()
   })
 
-  // async function createUser() {
-  //   await prisma.investor.create({
-  //     data: {
-  //       email: 'test@test.xyzabc'
-  //     },
-  //   })
+  async function createInvestor(email: string) {
+    await prisma.investor.create({
+      data: {
+        id: uuid(),
+        email,
+      },
+    })
 
-    // const allInvestors = await prisma.investor.findMany()
-    // console.dir(allInvestors, { depth: null })
-  // }
+    const allInvestors = await prisma.investor.findMany()
+    // tslint:disable-next-line:no-console
+    console.dir(allInvestors, { depth: null })
+  }
 
 export {
-    test
+    test,
+    createInvestor
 }

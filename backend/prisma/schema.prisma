@@ -11,8 +11,8 @@ model account {
   id              String            @id @db.Uuid
   investor_id     String            @db.Uuid
   exchange        String            @db.VarChar
-  updated_at      DateTime          @db.Timestamptz(6)
-  created_at      DateTime          @db.Timestamptz(6)
+  updated_at      DateTime          @default(now()) @db.Timestamptz(6)
+  created_at      DateTime          @default(now()) @db.Timestamptz(6)
   investor        investor          @relation(fields: [investor_id], references: [id])
   account_balance account_balance[]
   auditlog        auditlog[]
@@ -26,8 +26,8 @@ model account_balance {
   account_id  String?   @db.Uuid
   currency    String    @db.VarChar
   balance     Decimal   @db.Decimal(1000, 0)
-  updated_at  DateTime  @db.Timestamptz(6)
-  created_at  DateTime  @db.Timestamptz(6)
+  updated_at  DateTime  @default(now()) @db.Timestamptz(6)
+  created_at  DateTime  @default(now()) @db.Timestamptz(6)
   account     account?  @relation(fields: [account_id], references: [id])
   investor    investor? @relation(fields: [investor_id], references: [id])
 
@@ -39,7 +39,7 @@ model auditlog {
   investor_id String?         @db.Uuid
   account_id  String?         @db.Uuid
   action      auditlog_action
-  created_at  DateTime        @db.Timestamptz(6)
+  created_at  DateTime        @default(now()) @db.Timestamptz(6)
   account     account?        @relation(fields: [account_id], references: [id])
   investor    investor?       @relation(fields: [investor_id], references: [id])
 }
@@ -47,8 +47,8 @@ model auditlog {
 model investor {
   id              String            @id @db.Uuid
   email           String?           @db.VarChar
-  updated_at      DateTime          @db.Timestamptz(6)
-  created_at      DateTime          @db.Timestamptz(6)
+  updated_at      DateTime          @default(now()) @db.Timestamptz(6)
+  created_at      DateTime          @default(now()) @db.Timestamptz(6)
   account         account[]
   account_balance account_balance[]
   auditlog        auditlog[]
@@ -65,8 +65,8 @@ model trade {
   trade_status     trade_status
   exchange         String?      @db.VarChar
   exchange_status  String?      @db.VarChar
-  updated_at       DateTime     @db.Timestamptz(6)
-  created_at       DateTime     @db.Timestamptz(6)
+  updated_at       DateTime     @default(now()) @db.Timestamptz(6)
+  created_at       DateTime     @default(now()) @db.Timestamptz(6)
   account          account      @relation(fields: [account_id], references: [id])
   plan_planTotrade plan         @relation(fields: [plan], references: [id])
 }
@@ -77,8 +77,8 @@ model plan {
   status     plan_status
   frequency  Int
   amount     Decimal     @db.Decimal(1000, 0)
-  updated_at DateTime    @db.Timestamptz(6)
-  created_at DateTime    @db.Timestamptz(6)
+  updated_at DateTime    @default(now()) @db.Timestamptz(6)
+  created_at DateTime    @default(now()) @db.Timestamptz(6)
   account    account     @relation(fields: [account_id], references: [id])
   trade      trade[]
 }
