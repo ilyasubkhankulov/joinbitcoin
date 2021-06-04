@@ -1,6 +1,7 @@
 import CoinbasePro from "coinbase-pro";
 import { test } from "../repo";
 import { COINBASE_PRO_API_PASSPHRASE, COINBASE_PRO_API_KEY, COINBASE_PRO_API_SECRET } from "../secrets";
+import logger from 'pino';
 
 function getCoinbaseProStatus() {
     // const key = 'your_api_key';
@@ -17,12 +18,10 @@ function getCoinbaseProStatus() {
     sandboxURI
     );
 
-    // tslint:disable-next-line:no-console
-    console.log(authedClient)
+    logger().info(authedClient)
 
     authedClient.getCoinbaseAccounts((resp)=> {
-        // tslint:disable-next-line:no-console
-        console.log(resp)
+        logger().info(resp)
     });
 
     test();

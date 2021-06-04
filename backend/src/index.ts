@@ -4,6 +4,8 @@ import bodyParser from "body-parser";
 
 import { createInvestor } from "./repo";
 
+import logger from 'pino';
+
 const app = express();
 const port = 8180; // default port to listen
 
@@ -19,12 +21,10 @@ app.get( "/", ( req, res ) => {
 } );
 
 app.post( "/sign-up", async ( req, res ) => {
-    // tslint:disable-next-line:no-console
-    console.log(req.body);
+    logger().info(req.body)
     const email = req.body.email;
     const investor = await createInvestor(email);
-    // tslint:disable-next-line:no-console
-    console.log(investor);
+    logger().info(investor);
     res.send({"investor_id": investor.id});
 } );
 
@@ -34,8 +34,7 @@ app.get( "/cpro-status", async ( req, res ) => {
 } );
 
 app.post( "/link-account", async ( req, res ) => {
-    // tslint:disable-next-line:no-console
-    console.log(request.body);
+    logger().info(request.body);
     // const email = req.body.email;
     // createInvestor(email);
     // res.send('good');
@@ -43,7 +42,5 @@ app.post( "/link-account", async ( req, res ) => {
 
 // start the Express server
 app.listen( port, () => {
-    // @todo replace with winston
-    // tslint:disable-next-line:no-console
-    console.log( `server started at http://localhost:${ port }` );
+    logger().info(`server started at http://localhost:${ port }` );
 } );
