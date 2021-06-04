@@ -8,4 +8,4 @@
 #### Node Version
 Use this Node version via [nvm](https://github.com/nvm-sh/nvm)
 
-```nvm use 12```
+```nvm use 16.3.0```

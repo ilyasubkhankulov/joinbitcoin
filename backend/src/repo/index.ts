@@ -17,16 +17,16 @@ test()
     await prisma.$disconnect()
   })
 
-  async function createUser() {
-    await prisma.investor.create({
-      data: {
-        email: 'test@test.xyzabc'
-      },
-    })
-  
-    const allInvestors = await prisma.investor.findMany()
-    console.dir(allInvestors, { depth: null })
-  }
+  // async function createUser() {
+  //   await prisma.investor.create({
+  //     data: {
+  //       email: 'test@test.xyzabc'
+  //     },
+  //   })
+
+    // const allInvestors = await prisma.investor.findMany()
+    // console.dir(allInvestors, { depth: null })
+  // }
 
 export {
     test
