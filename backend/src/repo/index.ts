@@ -19,16 +19,17 @@ test()
   })
 
   async function createInvestor(email: string) {
-    await prisma.investor.create({
+    const newInvestor = await prisma.investor.create({
       data: {
         id: uuid(),
         email,
       },
     })
 
-    const allInvestors = await prisma.investor.findMany()
-    // tslint:disable-next-line:no-console
-    console.dir(allInvestors, { depth: null })
+    // const allInvestors = await prisma.investor.findMany()
+    // // tslint:disable-next-line:no-console
+    // console.dir(allInvestors, { depth: null })
+    return newInvestor;
   }
 
 export {

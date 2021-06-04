@@ -18,17 +18,27 @@ app.get( "/", ( req, res ) => {
     res.send( "Hello world!" );
 } );
 
+app.post( "/sign-up", async ( req, res ) => {
+    // tslint:disable-next-line:no-console
+    console.log(req.body);
+    const email = req.body.email;
+    const investor = await createInvestor(email);
+    // tslint:disable-next-line:no-console
+    console.log(investor);
+    res.send({"investor_id": investor.id});
+} );
+
 app.get( "/cpro-status", async ( req, res ) => {
     const database = await getCoinbaseProStatus()
     res.send(database);
 } );
 
-app.post( "/sign-up", async ( req, res ) => {
+app.post( "/link-account", async ( req, res ) => {
     // tslint:disable-next-line:no-console
     console.log(request.body);
-    const email = req.body.email;
-    createInvestor(email);
-    res.send('good');
+    // const email = req.body.email;
+    // createInvestor(email);
+    // res.send('good');
 } );
 
 // start the Express server
