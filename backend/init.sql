@@ -1,3 +1,7 @@
+-- truncate
+
+truncate table investor CASCADE;
+
 -- drop
 drop type IF EXISTS plan_status CASCADE;
 drop type IF EXISTS auditlog_action CASCADE;
@@ -89,6 +93,7 @@ CREATE TABLE connected.coinbasepro (
   "id" uuid PRIMARY KEY,
   "account_id" uuid NOT NULL,
   "nickname" varchar NOT NULL,
+  "key" varchar NOT NULL,
   "passphrase" varchar NOT NULL,
   "secret" varchar NOT NULL,
   "updated_at" timestamptz NOT NULL DEFAULT NOW(),

@@ -35,7 +35,10 @@ app.get( "/cpro-status", async ( req, res ) => {
 
 app.post( "/link-account", async ( req, res ) => {
     logger().info(request.body);
-    // const email = req.body.email;
+    const nickname = req.body.nickname;
+    const key = req.body.key;
+    const secret = req.body.secret;
+    const passphrase = req.body.passphrase;
     // createInvestor(email);
     // res.send('good');
 } );
