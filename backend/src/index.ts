@@ -1,13 +1,11 @@
 import express, { request } from "express";
 import { getCoinbaseProStatus } from "./coinbase-pro";
-import bodyParser from "body-parser";
 
 import { createInvestor } from "./repo";
 
 import logger from 'pino';
 
 const app = express();
-const port = 8180; // default port to listen
 
 // parse application/x-www-form-urlencoded
 app.use(express.urlencoded({ extended: false }))
@@ -43,7 +41,4 @@ app.post( "/link-account", async ( req, res ) => {
     // res.send('good');
 } );
 
-// start the Express server
-app.listen( port, () => {
-    logger().info(`server started at http://localhost:${ port }` );
-} );
+export default app;
