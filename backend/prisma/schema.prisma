@@ -9,14 +9,14 @@ datasource db {
 
 model account {
   id              String            @id @db.Uuid
-  investor_id     String            @db.Uuid
+  investor_id     String            @unique @db.Uuid
   exchange        String            @db.VarChar
   updated_at      DateTime          @default(now()) @db.Timestamptz(6)
   created_at      DateTime          @default(now()) @db.Timestamptz(6)
   investor        investor          @relation(fields: [investor_id], references: [id])
   account_balance account_balance[]
   auditlog        auditlog[]
-  plan            plan[]
+  plan            plan?
   trade           trade[]
 }
 
@@ -46,10 +46,10 @@ model auditlog {
 
 model investor {
   id              String            @id @db.Uuid
-  email           String?           @db.VarChar
+  email           String            @unique @db.VarChar
   updated_at      DateTime          @default(now()) @db.Timestamptz(6)
   created_at      DateTime          @default(now()) @db.Timestamptz(6)
-  account         account[]
+  account         account?
   account_balance account_balance[]
   auditlog        auditlog[]
 }
@@ -73,7 +73,7 @@ model trade {
 
 model plan {
   id         String      @id @db.Uuid
-  account_id String      @db.Uuid
+  account_id String      @unique @db.Uuid
   status     plan_status
   frequency  Int
   amount     Decimal     @db.Decimal(1000, 0)

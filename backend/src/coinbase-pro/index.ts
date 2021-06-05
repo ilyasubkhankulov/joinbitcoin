@@ -1,6 +1,6 @@
-import CoinbasePro from "coinbase-pro";
-import { test } from "../repo";
-import { COINBASE_PRO_API_PASSPHRASE, COINBASE_PRO_API_KEY, COINBASE_PRO_API_SECRET } from "../secrets";
+import CoinbasePro from 'coinbase-pro';
+// import { test } from '../repo';
+import { COINBASE_PRO_API_PASSPHRASE, COINBASE_PRO_API_KEY, COINBASE_PRO_API_SECRET } from '../secrets';
 import logger from 'pino';
 
 /**

@@ -66,7 +66,7 @@ CREATE TYPE "auditlog_action" AS ENUM (
 
 CREATE TABLE "investor" (
   "id" uuid PRIMARY KEY,
-  "email" varchar,
+  "email" varchar NOT NULL,
   "updated_at" timestamptz NOT NULL DEFAULT NOW(),
   "created_at" timestamptz NOT NULL DEFAULT NOW()
 );
