@@ -2,14 +2,15 @@
   "name": "joinbitcoin.org",
   "version": "1.0.0",
   "description": "",
-  "main": "dist/index.js",
+  "main": "dist/server.js",
   "scripts": {
     "prebuild": "tslint -c tslint.json -p tsconfig.json --fix",
     "build": "tsc",
     "prestart": "npm run build",
-    "start": "node --inspect=5858 -r ts-node/register ./src/index.ts  | pino-pretty",
+    "prepare": "husky install",
+    "start": "node --unhandled-rejections=strict --inspect=5858 -r ts-node/register ./src/server.ts | pino-pretty",
     "start:watch": "nodemon",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest -i"
   },
   "engines": {
     "node": ">=16.0.0",
@@ -24,23 +25,31 @@
     "coinbase-pro": "^0.9.0",
     "express": "^4.17.1",
     "got": "^11.8.2",
+    "joi": "^17.4.0",
     "livereload": "^0.9.3",
     "pino": "^6.11.3",
+    "supertest": "^6.1.3",
     "tough-cookie": "^4.0.0",
-    "uuid": "^3.4.0",
-    "uuidv4": "^6.2.8"
+    "uuid": "^3.4.0"
   },
   "devDependencies": {
     "@types/express": "^4.17.11",
+    "@types/jest": "^26.0.23",
     "@types/livereload": "^0.9.0",
     "@types/node": "^15.3.0",
     "@types/pino": "^6.3.8",
+    "@types/supertest": "^2.0.11",
     "@types/tough-cookie": "^4.0.0",
+    "@types/uuid": "^8.3.0",
+    "husky": "^6.0.0",
+    "jest": "^27.0.4",
+    "jest-mock-extended": "^1.0.15",
     "nodemon": "^2.0.7",
     "pino-pretty": "^5.0.2",
     "prisma": "^2.24.1",
+    "ts-jest": "^27.0.2",
     "ts-node": "^10.0.0",
     "tslint": "^6.1.3",
-    "typescript": "^4.2.4"
+    "typescript": "^4.3.2"
   }
 }

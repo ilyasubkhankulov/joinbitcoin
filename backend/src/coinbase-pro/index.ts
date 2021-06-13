@@ -1,8 +1,12 @@
-import CoinbasePro from "coinbase-pro";
-import { test } from "../repo";
-import { COINBASE_PRO_API_PASSPHRASE, COINBASE_PRO_API_KEY, COINBASE_PRO_API_SECRET } from "../secrets";
+import CoinbasePro from 'coinbase-pro';
+// import { test } from '../repo';
+import { COINBASE_PRO_API_PASSPHRASE, COINBASE_PRO_API_KEY, COINBASE_PRO_API_SECRET } from '../secrets';
 import logger from 'pino';
 
+/**
+ * A function that verifies coinbase pro credentials
+ * @return {object}
+ */
 function getCoinbaseProStatus() {
     // const key = 'your_api_key';
     // const secret = 'your_b64_secret';
@@ -24,7 +28,8 @@ function getCoinbaseProStatus() {
         logger().info(resp)
     });
 
-    test();
+    // test();
+    return true;
 }
 
 export {
