@@ -1,6 +1,5 @@
 import app from '../index';
 import request from 'supertest';
-// import logger from 'pino';
 
 jest.mock('uuid');
 jest.mock('../repo');
