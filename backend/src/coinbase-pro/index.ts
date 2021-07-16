@@ -1,36 +1,35 @@
-import CoinbasePro from 'coinbase-pro';
+import { CoinbasePro } from 'coinbase-pro-node';
 // import { test } from '../repo';
 import { COINBASE_PRO_API_PASSPHRASE, COINBASE_PRO_API_KEY, COINBASE_PRO_API_SECRET } from '../secrets';
 import logger from 'pino';
 
 /**
  * A function that verifies coinbase pro credentials
- * @return {object}
+ * @param {string} key
+ * @param {string} secret
+ * @param {string} passphrase
+ * @param {boolean} useSandbox
+ * @return boolean
  */
-function getCoinbaseProStatus() {
-    // const key = 'your_api_key';
-    // const secret = 'your_b64_secret';
-    // const passphrase = 'your_passphrase';
-
-    // const apiURI = 'https://api.pro.coinbase.com';
-    const sandboxURI = 'https://api-public.sandbox.pro.coinbase.com';
-
-    const authedClient = new CoinbasePro.AuthenticatedClient(
-    COINBASE_PRO_API_KEY,
-    COINBASE_PRO_API_SECRET,
-    COINBASE_PRO_API_PASSPHRASE,
-    sandboxURI
-    );
-
-    logger().info(authedClient)
-
-    authedClient.getCoinbaseAccounts((resp)=> {
-        logger().info(resp)
+function getCoinbaseProStatus(key: string, secret: string, passphrase: string, useSandbox: boolean) {
+    const authedClient = new CoinbasePro({
+    apiKey: key,
+    apiSecret: secret,
+    passphrase,
+    useSandbox
     });
 
-    // test();
+    // logger().info(authedClient)
+
+    authedClient.rest.account.listAccounts().then(accounts => {
+        const message = `You can trade "${accounts.length}" different pairs.`;
+        logger().info(message)
+    });
     return true;
 }
+
+// delete class instance
+// https://stackoverflow.com/questions/21118952/javascript-create-and-destroy-class-instance-through-class-method/21119696
 
 export {
     getCoinbaseProStatus

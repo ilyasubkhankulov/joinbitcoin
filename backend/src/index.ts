@@ -22,7 +22,7 @@ app.get( '/', ( req, res ) => {
 } );
 
 const investorSchema = Joi.object({
-    email: Joi.string().email()
+    email: Joi.string().email().required()
   });
 
 app.post( '/sign-up', async ( req, res ) => {
@@ -31,6 +31,7 @@ app.post( '/sign-up', async ( req, res ) => {
         value = await investorSchema.validateAsync(req.body)
     } catch (err) {
         logger().info(err);
+        res.statusCode = 400;
         return res.send({
           status: 'error',
           message: 'Invalid request data',
@@ -48,32 +49,37 @@ app.post( '/sign-up', async ( req, res ) => {
                 'investor_id': investor.id,
                 'email': investor.email
             },
-            });
+        });
     } catch (error) {
-        res.send(error);
+        res.statusCode = 400;
+        return res.send({
+            status: 'error',
+            message: 'Invalid request data',
+          });
     }
 });
 
-app.get( '/cpro-status', async ( req, res ) => {
-    const database = await getCoinbaseProStatus()
-    res.send(database);
-} );
-
 app.post( '/link-account', async ( req, res ) => {
-    // logger().info(request.body);
-    const nickname = req.body.nickname;
+    logger().info(request.body);
+    // const nickname = req.body.nickname;
     const key = req.body.key;
     const secret = req.body.secret;
     const passphrase = req.body.passphrase;
-    // createInvestor(email);
-    // res.send('good');
+    const useSandbox = (req.body.use_sandbox === true) ? true : false;
+
+    let accountStatus;
+    try {
+        accountStatus = await getCoinbaseProStatus(key, secret, passphrase, useSandbox);
+    } catch (error) {
+        res.statusCode = 400;
+        return res.send({
+            status: 'error',
+            message: 'Invalid Coinbase Pro API credentials',
+          });
+    }
+
+    res.statusCode = 201;
+    res.send({ status: 'true' });
 } );
-
-// const port = 8180; // default port to listen
-
-// // start the Express server
-// const server = app.listen( port, () => {
-//     logger().info(`server started at http://localhost:${ port }` );
-// } );
 
 export default app;
