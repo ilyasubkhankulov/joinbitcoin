@@ -3,17 +3,6 @@ import { v4 } from 'uuid';
 import logger from 'pino';
 
 /**
- * A function that returns all 'investor' objects from the database
- * @param {string} email
- * @return {object}
- */
-async function test(ctx: Context) {
-  // ... you will write your Prisma Client queries here]
-  const allInvestors = await ctx.prisma.investor.findMany()
-  // logger().info(allInvestors)
-}
-
-/**
  * A function that creates an 'investor' object in the database
  * @param {string} email
  * @param {PrismaClient} ctx
@@ -37,6 +26,5 @@ async function createInvestor(email: string, ctx: Context) {
 }
 
 export {
-    test,
     createInvestor
 }
