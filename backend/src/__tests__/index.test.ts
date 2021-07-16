@@ -118,7 +118,7 @@ describe('POST /link-account - test sign up endpoint with mocked database functi
       key: '',
       secret: '',
       passphrase: '',
-      use_sandbox: '',
+      useSandbox: false,
     };
 
     const mockResponseGetCoinbaseProStatus = true;
@@ -126,7 +126,10 @@ describe('POST /link-account - test sign up endpoint with mocked database functi
     (getCoinbaseProStatus as jest.Mock).mockReturnValue(mockResponseGetCoinbaseProStatus);
 
     const result = await request(app).post('/link-account').send(coinbaseProAccount).expect(201)
-    .expect({ status: 'true' });
+    .expect({
+      status: 'true',
+      message: 'Coinbase Pro account active!'
+    });
   });
 
   it('Link API Request - Returns 201 (success) - use sandbox', async () => {
@@ -135,7 +138,7 @@ describe('POST /link-account - test sign up endpoint with mocked database functi
       key: '',
       secret: '',
       passphrase: '',
-      use_sandbox: true,
+      useSandbox: true,
     };
 
     const mockResponseGetCoinbaseProStatus = true;
@@ -143,7 +146,10 @@ describe('POST /link-account - test sign up endpoint with mocked database functi
     (getCoinbaseProStatus as jest.Mock).mockReturnValue(mockResponseGetCoinbaseProStatus);
 
     const result = await request(app).post('/link-account').send(coinbaseProAccount).expect(201)
-    .expect({ status: 'true' });
+    .expect({
+      status: 'true',
+      message: 'Coinbase Pro account active!'
+    });
   });
 
   it('Link API Request - Returns 201 (success) - use prod', async () => {
@@ -152,7 +158,7 @@ describe('POST /link-account - test sign up endpoint with mocked database functi
       key: '',
       secret: '',
       passphrase: '',
-      use_sandbox: false,
+      useSandbox: false,
     };
 
     const mockResponseGetCoinbaseProStatus = true;
@@ -160,9 +166,11 @@ describe('POST /link-account - test sign up endpoint with mocked database functi
     (getCoinbaseProStatus as jest.Mock).mockReturnValue(mockResponseGetCoinbaseProStatus);
 
     const result = await request(app).post('/link-account').send(coinbaseProAccount).expect(201)
-    .expect({ status: 'true' });
+    .expect({
+      status: 'true',
+      message: 'Coinbase Pro account active!'
+    });
   });
-
 
   it('Link API Request - Throws Error (invalid credentials)', async () => {
     const coinbaseProAccount = {
@@ -170,11 +178,11 @@ describe('POST /link-account - test sign up endpoint with mocked database functi
       key: '',
       secret: '',
       passphrase: '',
-      use_sandbox: '',
+      useSandbox: '',
     };
 
     const mockResponseGetCoinbaseProStatus = new Error();
-    
+
     (getCoinbaseProStatus as jest.Mock).mockRejectedValue(mockResponseGetCoinbaseProStatus);
 
     const result = await request(app).post('/link-account').send(coinbaseProAccount).expect(400)

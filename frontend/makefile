@@ -1,4 +1,4 @@
-build:
+build-fe:
 	yarn build
 
 start:
