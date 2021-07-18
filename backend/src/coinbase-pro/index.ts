@@ -1,7 +1,5 @@
 import { CoinbasePro } from 'coinbase-pro-node';
 import logger from 'pino';
-// import { test } from '../repo';
-// import { COINBASE_PRO_API_PASSPHRASE, COINBASE_PRO_API_KEY, COINBASE_PRO_API_SECRET } from '../secrets';
 
 /**
  * A function that verifies coinbase pro credentials

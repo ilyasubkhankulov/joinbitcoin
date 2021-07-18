@@ -38,7 +38,7 @@ class RESTClient {
     
 }
 
-export class AccountAPI { 
+class AccountAPI { 
     constructor() {
     }
 
