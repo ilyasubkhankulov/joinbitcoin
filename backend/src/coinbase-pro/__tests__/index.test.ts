@@ -9,7 +9,7 @@ describe('Coinbase Link', () => {
         const passphrase = '';
         const useSandbox = false;
 
-        const status = getCoinbaseProStatus(
+        const status = await getCoinbaseProStatus(
             key,
             secret,
             passphrase,
@@ -24,7 +24,7 @@ describe('Coinbase Link', () => {
         const passphrase = '';
         const useSandbox = true;
 
-        const status = getCoinbaseProStatus(
+        const status = await getCoinbaseProStatus(
             key,
             secret,
             passphrase,
@@ -32,4 +32,23 @@ describe('Coinbase Link', () => {
 
         expect(status).toEqual(true);
     });
+
+    // it('Link Account - Error', async () => {
+    //     const key = '';
+    //     const secret = '';
+    //     const passphrase = '';
+    //     const useSandbox = true;
+
+    //     jest.spyOn(AccountAPI.prototype, 'listAccounts').mockImplementation(() => new Promise<any>((resolve) => {
+    //         resolve(returnedAccounts);
+    //     }));
+
+    //     const status = await getCoinbaseProStatus(
+    //         key,
+    //         secret,
+    //         passphrase,
+    //         useSandbox);
+
+    //     expect(status).toEqual(true);
+    // });
   });

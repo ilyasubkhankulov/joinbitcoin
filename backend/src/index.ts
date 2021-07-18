@@ -5,10 +5,13 @@ import { PrismaClient } from '.prisma/client';
 import { getCoinbaseProStatus } from './coinbase-pro';
 import { createInvestor } from './repo';
 import Joi from 'joi';
+import cors from 'cors';
 
 const prisma = new PrismaClient()
 
 const app = express();
+
+app.use(cors());
 
 // parse application/x-www-form-urlencoded
 app.use(express.urlencoded({ extended: false }))
@@ -59,19 +62,24 @@ app.post( '/sign-up', async ( req, res ) => {
     }
 });
 
-app.post( '/link-account', async ( req, res ) => {
-    logger().info(request.body);
-    // const nickname = req.body.nickname;
+app.post( '/link-account', async ( req, res, next ) => {
+    logger().info(request.body)
+    const nickname = req.body.nickname;
     const key = req.body.key;
     const secret = req.body.secret;
     const passphrase = req.body.passphrase;
-    const useSandbox = (req.body.use_sandbox === true) ? true : false;
+    const useSandbox = (req.body.useSandbox === 'true');
+
+    // @todo write test to check sandbox boolean
 
     let accountStatus;
     try {
+        logger().info({'useSandbox': useSandbox});
         accountStatus = await getCoinbaseProStatus(key, secret, passphrase, useSandbox);
+        logger().info('Coinbase Pro account active!');
     } catch (error) {
         res.statusCode = 400;
+        logger().error('Invalid Coinbase Pro API credentials');
         return res.send({
             status: 'error',
             message: 'Invalid Coinbase Pro API credentials',
@@ -79,7 +87,10 @@ app.post( '/link-account', async ( req, res ) => {
     }
 
     res.statusCode = 201;
-    res.send({ status: 'true' });
+    res.send({
+        status: 'true',
+        message: 'Coinbase Pro account active!'
+    });
 } );
 
 export default app;
