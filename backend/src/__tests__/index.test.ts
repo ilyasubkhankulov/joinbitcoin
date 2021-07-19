@@ -125,7 +125,7 @@ describe('POST /link-account - test sign up endpoint with mocked database functi
 
     (getCoinbaseProStatus as jest.Mock).mockReturnValue(mockResponseGetCoinbaseProStatus);
 
-    const result = await request(app).post('/link-account').send(coinbaseProAccount).expect(201)
+    await request(app).post('/link-account').send(coinbaseProAccount).expect(201)
     .expect({
       status: 'true',
       message: 'Coinbase Pro account active!'
@@ -145,7 +145,7 @@ describe('POST /link-account - test sign up endpoint with mocked database functi
 
     (getCoinbaseProStatus as jest.Mock).mockReturnValue(mockResponseGetCoinbaseProStatus);
 
-    const result = await request(app).post('/link-account').send(coinbaseProAccount).expect(201)
+    await request(app).post('/link-account').send(coinbaseProAccount).expect(201)
     .expect({
       status: 'true',
       message: 'Coinbase Pro account active!'
@@ -165,7 +165,7 @@ describe('POST /link-account - test sign up endpoint with mocked database functi
 
     (getCoinbaseProStatus as jest.Mock).mockReturnValue(mockResponseGetCoinbaseProStatus);
 
-    const result = await request(app).post('/link-account').send(coinbaseProAccount).expect(201)
+    await request(app).post('/link-account').send(coinbaseProAccount).expect(201)
     .expect({
       status: 'true',
       message: 'Coinbase Pro account active!'
@@ -185,7 +185,7 @@ describe('POST /link-account - test sign up endpoint with mocked database functi
 
     (getCoinbaseProStatus as jest.Mock).mockRejectedValue(mockResponseGetCoinbaseProStatus);
 
-    const result = await request(app).post('/link-account').send(coinbaseProAccount).expect(400)
+    await request(app).post('/link-account').send(coinbaseProAccount).expect(400)
     .expect('Content-Type', /json/)
     expect({
       status: 'error',

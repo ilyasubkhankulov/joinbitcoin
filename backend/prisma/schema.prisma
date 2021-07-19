@@ -8,16 +8,17 @@ datasource db {
 }
 
 model account {
-  id              String            @id @db.Uuid
-  investor_id     String            @unique @db.Uuid
-  exchange        String            @db.VarChar
-  updated_at      DateTime          @default(now()) @db.Timestamptz(6)
-  created_at      DateTime          @default(now()) @db.Timestamptz(6)
-  investor        investor          @relation(fields: [investor_id], references: [id])
-  account_balance account_balance[]
-  auditlog        auditlog[]
-  plan            plan?
-  trade           trade[]
+  id                   String                 @id @db.Uuid
+  investor_id          String                 @unique @db.Uuid
+  exchange             String                 @db.VarChar
+  updated_at           DateTime               @default(now()) @db.Timestamptz(6)
+  created_at           DateTime               @default(now()) @db.Timestamptz(6)
+  investor             investor               @relation(fields: [investor_id], references: [id])
+  account_balance      account_balance[]
+  auditlog             auditlog[]
+  exchange_coinbasepro exchange_coinbasepro[]
+  plan                 plan?
+  trade                trade[]
 }
 
 model account_balance {
@@ -46,7 +47,7 @@ model auditlog {
 
 model investor {
   id              String            @id @db.Uuid
-  email           String            @unique @db.VarChar
+  email           String?           @unique @db.VarChar
   updated_at      DateTime          @default(now()) @db.Timestamptz(6)
   created_at      DateTime          @default(now()) @db.Timestamptz(6)
   account         account?
@@ -81,6 +82,18 @@ model plan {
   created_at DateTime    @default(now()) @db.Timestamptz(6)
   account    account     @relation(fields: [account_id], references: [id])
   trade      trade[]
+}
+
+model exchange_coinbasepro {
+  id         String   @id @db.Uuid
+  account_id String   @db.Uuid
+  nickname   String   @db.VarChar
+  key        String   @db.VarChar
+  passphrase String   @db.VarChar
+  secret     String   @db.VarChar
+  updated_at DateTime @default(now()) @db.Timestamptz(6)
+  created_at DateTime @default(now()) @db.Timestamptz(6)
+  account    account  @relation(fields: [account_id], references: [id])
 }
 
 enum auditlog_action {

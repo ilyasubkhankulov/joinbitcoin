@@ -2,7 +2,7 @@ import express, { request } from 'express';
 import logger from 'pino';
 import { PrismaClient } from '.prisma/client';
 
-import { getCoinbaseProStatus } from './coinbase-pro';
+import { getCoinbaseProStatus, saveCoinbaseProCredentials } from './coinbase-pro';
 import { createInvestor } from './repo';
 import Joi from 'joi';
 import cors from 'cors';
@@ -76,13 +76,24 @@ app.post( '/link-account', async ( req, res, next ) => {
     try {
         logger().info({'useSandbox': useSandbox});
         accountStatus = await getCoinbaseProStatus(key, secret, passphrase, useSandbox);
+        const dummyInvestorId = '924a96cc-8af9-41ed-8ce7-12ea32827514';
+        // @todo (urgent) check if account exists in the db
+        saveCoinbaseProCredentials(
+            { prisma },
+            accountStatus,
+            dummyInvestorId,
+            nickname,
+            key,
+            passphrase,
+            secret,
+            )
         logger().info('Coinbase Pro account active!');
     } catch (error) {
         res.statusCode = 400;
-        logger().error('Invalid Coinbase Pro API credentials');
+        logger().error(error.toString());
         return res.send({
             status: 'error',
-            message: 'Invalid Coinbase Pro API credentials',
+            message: error.toString(),
           });
     }
 

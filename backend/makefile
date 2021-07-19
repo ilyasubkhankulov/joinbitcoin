@@ -11,3 +11,8 @@ coverage:
 test:
 	npm run test
 
+introspect:
+	npx prisma introspect
+
+generate:
+	npx prisma generate

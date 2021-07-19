@@ -1,6 +1,6 @@
 // import logo from './jira_notion_sync.svg';
 import './App.css';
-import LinkAccount from './components/linkAccount';
+import LinkAccount from './components/linkAccount/linkAccount';
 
 function App() {
   return (
