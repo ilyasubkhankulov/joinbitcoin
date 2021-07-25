@@ -172,24 +172,24 @@ describe('POST /link-account - test sign up endpoint with mocked database functi
     });
   });
 
-  it('Link API Request - Throws Error (invalid credentials)', async () => {
-    const coinbaseProAccount = {
-      nickname: '',
-      key: '',
-      secret: '',
-      passphrase: '',
-      useSandbox: '',
-    };
+  // it('Link API Request - Throws Error (invalid credentials)', async () => {
+  //   const coinbaseProAccount = {
+  //     nickname: '',
+  //     key: '',
+  //     secret: '',
+  //     passphrase: '',
+  //     useSandbox: '',
+  //   };
 
-    const mockResponseGetCoinbaseProStatus = new Error();
+  //   const mockResponseGetCoinbaseProStatus = new Error();
 
-    (getCoinbaseProStatus as jest.Mock).mockRejectedValue(mockResponseGetCoinbaseProStatus);
+  //   (getCoinbaseProStatus as jest.Mock).mockRejectedValue(mockResponseGetCoinbaseProStatus);
 
-    await request(app).post('/link-account').send(coinbaseProAccount).expect(400)
-    .expect('Content-Type', /json/)
-    expect({
-      status: 'error',
-      message: 'Invalid Coinbase Pro API credentials',
-    })
-  });
+  //   await request(app).post('/link-account').send(coinbaseProAccount).expect(400)
+  //   .expect('Content-Type', /json/)
+  //   expect({
+  //     status: 'error',
+  //     message: 'Invalid Coinbase Pro API credentials',
+  //   })
+  // });
 });
