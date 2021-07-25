@@ -13,18 +13,16 @@ import { createCoinbaseProAccount } from '../repo';
  * @return boolean
  */
 async function getCoinbaseProStatus(key: string, secret: string, passphrase: string, useSandbox: boolean) {
-    
+
     const authedClient = new CoinbasePro({
         apiKey: key,
         apiSecret: secret,
         passphrase,
         useSandbox
     });
-    console.log({authedClient: JSON.stringify(authedClient)});
-    
+
     try {
         const accounts = await authedClient.rest.account.listAccounts();
-        console.log({accounts: JSON.stringify(accounts)});
         const message = `You can trade "${accounts.length}" different pairs.`;
         logger().info(message);
         return accounts;
