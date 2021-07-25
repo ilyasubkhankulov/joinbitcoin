@@ -1,6 +1,8 @@
 import app from '../index';
 import request from 'supertest';
 
+import { Account } from 'coinbase-pro-node';
+
 jest.mock('uuid');
 jest.mock('../repo');
 jest.mock('../coinbase-pro');
@@ -8,6 +10,27 @@ jest.mock('../coinbase-pro');
 import uuid from 'uuid';
 import { createInvestor } from '../repo';
 import { getCoinbaseProStatus } from '../coinbase-pro';
+
+const returnedAccounts = [
+  {
+      'id': '71452118-efc7-4cc4-8780-a5e22d4baa53',
+      'currency': 'BTC',
+      'balance': '0.0000000000000000',
+      'available': '0.0000000000000000',
+      'hold': '0.0000000000000000',
+      'profile_id': '75da88c5-05bf-4f54-bc85-5c775bd68254',
+      'trading_enabled': true
+  },
+  {
+      'id': 'e316cb9a-0808-4fd7-8914-97829c1925de',
+      'currency': 'USD',
+      'balance': '80.2301373066930000',
+      'available': '79.2266348066930000',
+      'hold': '1.0035025000000000',
+      'profile_id': '75da88c5-05bf-4f54-bc85-5c775bd68254',
+      'trading_enabled': true
+  }
+];
 
 afterAll(async () => {
   await new Promise(resolve => setTimeout(() => resolve(null), 400)); // avoid jest open handle error https://github.com/visionmedia/supertest/issues/520#issuecomment-469044925
@@ -111,7 +134,7 @@ describe('POST /sign-up - test sign up endpoint with mocked database function', 
   });
 });
 
-describe('POST /link-account - test sign up endpoint with mocked database function', () => {
+describe('POST /link-account - test link account endpoint with mocked database function', () => {
   it('Link API Request - Returns 201 (success)', async () => {
     const coinbaseProAccount = {
       nickname: '',
@@ -121,11 +144,11 @@ describe('POST /link-account - test sign up endpoint with mocked database functi
       useSandbox: false,
     };
 
-    const mockResponseGetCoinbaseProStatus = true;
+    const mockResponseGetCoinbaseProStatus = returnedAccounts;
 
     (getCoinbaseProStatus as jest.Mock).mockReturnValue(mockResponseGetCoinbaseProStatus);
 
-    const result = await request(app).post('/link-account').send(coinbaseProAccount).expect(201)
+    await request(app).post('/link-account').send(coinbaseProAccount).expect(201)
     .expect({
       status: 'true',
       message: 'Coinbase Pro account active!'
@@ -141,11 +164,11 @@ describe('POST /link-account - test sign up endpoint with mocked database functi
       useSandbox: true,
     };
 
-    const mockResponseGetCoinbaseProStatus = true;
+    const mockResponseGetCoinbaseProStatus = returnedAccounts;
 
     (getCoinbaseProStatus as jest.Mock).mockReturnValue(mockResponseGetCoinbaseProStatus);
 
-    const result = await request(app).post('/link-account').send(coinbaseProAccount).expect(201)
+    await request(app).post('/link-account').send(coinbaseProAccount).expect(201)
     .expect({
       status: 'true',
       message: 'Coinbase Pro account active!'
@@ -161,15 +184,37 @@ describe('POST /link-account - test sign up endpoint with mocked database functi
       useSandbox: false,
     };
 
-    const mockResponseGetCoinbaseProStatus = true;
+    const mockResponseGetCoinbaseProStatus = returnedAccounts;
 
     (getCoinbaseProStatus as jest.Mock).mockReturnValue(mockResponseGetCoinbaseProStatus);
 
-    const result = await request(app).post('/link-account').send(coinbaseProAccount).expect(201)
+    await request(app).post('/link-account').send(coinbaseProAccount).expect(201)
     .expect({
       status: 'true',
       message: 'Coinbase Pro account active!'
     });
+  });
+
+  it('Link API Request - Returns 400 (failed) - use prod', async () => {
+    const coinbaseProAccount = {
+      nickname: '',
+      key: '',
+      secret: '',
+      passphrase: '',
+      useSandbox: false,
+    };
+
+    // const mockResponseGetCoinbaseProStatus = Account[];
+    const mockResponseGetCoinbaseProStatus = [] as Account[];
+
+    (getCoinbaseProStatus as jest.Mock).mockReturnValue(mockResponseGetCoinbaseProStatus);
+
+    await request(app).post('/link-account').send(coinbaseProAccount).expect(400)
+    .expect('Content-Type', /json/)
+    expect({
+      status: 'error',
+      message: 'Invalid Coinbase Pro API credentials',
+    })
   });
 
   it('Link API Request - Throws Error (invalid credentials)', async () => {
@@ -185,7 +230,7 @@ describe('POST /link-account - test sign up endpoint with mocked database functi
 
     (getCoinbaseProStatus as jest.Mock).mockRejectedValue(mockResponseGetCoinbaseProStatus);
 
-    const result = await request(app).post('/link-account').send(coinbaseProAccount).expect(400)
+    await request(app).post('/link-account').send(coinbaseProAccount).expect(400)
     .expect('Content-Type', /json/)
     expect({
       status: 'error',

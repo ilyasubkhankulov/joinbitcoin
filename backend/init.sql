@@ -8,7 +8,7 @@ drop type IF EXISTS auditlog_action CASCADE;
 drop type IF EXISTS order_type CASCADE;
 drop type IF EXISTS trade_status CASCADE;
 drop schema IF EXISTS connected CASCADE;
-drop table IF EXISTS connected.coinbasepro CASCADE;
+drop table IF EXISTS exchange_coinbasepro CASCADE;
 
 drop type if exists plan_freq cascade;
 drop table IF EXISTS coinbasepro CASCADE ;
@@ -33,7 +33,7 @@ $$ LANGUAGE plpgsql;
 -- create schemas
 
 
-create schema IF NOT EXISTS connected ;
+--create schema IF NOT EXISTS connected ;
 -- create
 CREATE TYPE "plan_status" AS ENUM (
   'Disabled',
@@ -66,14 +66,14 @@ CREATE TYPE "auditlog_action" AS ENUM (
 
 CREATE TABLE "investor" (
   "id" uuid PRIMARY KEY,
-  "email" varchar NOT NULL,
+  "email" varchar UNIQUE,
   "updated_at" timestamptz NOT NULL DEFAULT NOW(),
   "created_at" timestamptz NOT NULL DEFAULT NOW()
 );
 
 CREATE TABLE "account" (
   "id" uuid PRIMARY KEY,
-  "investor_id" uuid NOT NULL,
+  "investor_id" uuid NOT NULL UNIQUE,
   "exchange" varchar NOT NULL,
   "updated_at" timestamptz NOT NULL DEFAULT NOW(),
   "created_at" timestamptz NOT NULL DEFAULT NOW()
@@ -89,7 +89,7 @@ CREATE TABLE "account_balance" (
   "created_at" timestamptz NOT NULL DEFAULT NOW()
 );
 
-CREATE TABLE connected.coinbasepro (
+CREATE TABLE "exchange_coinbasepro" (
   "id" uuid PRIMARY KEY,
   "account_id" uuid NOT NULL,
   "nickname" varchar NOT NULL,
@@ -102,7 +102,7 @@ CREATE TABLE connected.coinbasepro (
 
 CREATE TABLE "plan" (
   "id" uuid PRIMARY KEY,
-  "account_id" uuid NOT NULL,
+  "account_id" uuid NOT NULL UNIQUE,
   "status" plan_status NOT NULL,
   "frequency" integer NOT NULL,
   "amount" numeric(1000,0) NOT NULL,
@@ -139,7 +139,7 @@ ALTER TABLE "account_balance" ADD FOREIGN KEY ("investor_id") REFERENCES "invest
 
 ALTER TABLE "account_balance" ADD FOREIGN KEY ("account_id") REFERENCES "account" ("id");
 
-ALTER TABLE connected.coinbasepro ADD FOREIGN KEY ("account_id") REFERENCES "account" ("id");
+ALTER TABLE "exchange_coinbasepro" ADD FOREIGN KEY ("account_id") REFERENCES "account" ("id");
 
 ALTER TABLE "plan" ADD FOREIGN KEY ("account_id") REFERENCES "account" ("id");
 
@@ -187,6 +187,6 @@ FOR EACH ROW
 EXECUTE PROCEDURE trigger_set_timestamp();
 
 CREATE TRIGGER set_timestamp
-BEFORE UPDATE ON connected.coinbasepro
+BEFORE UPDATE ON exchange_coinbasepro
 FOR EACH ROW
 EXECUTE PROCEDURE trigger_set_timestamp();
