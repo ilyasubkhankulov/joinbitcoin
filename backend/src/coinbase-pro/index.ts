@@ -2,7 +2,6 @@ import { CoinbasePro, Account} from 'coinbase-pro-node';
 import logger from 'pino';
 
 import { Context } from '../context';
-
 import { createCoinbaseProAccount } from '../repo';
 
 /**
@@ -28,7 +27,7 @@ async function getCoinbaseProStatus(key: string, secret: string, passphrase: str
         console.log({accounts: JSON.stringify(accounts)});
         const message = `You can trade "${accounts.length}" different pairs.`;
         logger().info(message);
-        return true;
+        return accounts;
     } catch (err){
         throw new Error('Invalid Coinbase Pro Account')
     }

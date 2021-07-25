@@ -6,16 +6,6 @@ jest.mock('../../repo');
 
 const mockListAccounts = jest.fn();
 
-// jest.mock('coinbase-pro-node', () => {
-//     return function() {
-//         return {CoinbasePro: {rest: {
-//     //   account: {listAccounts: () => new Promise(resolve => resolve(returnedAccounts))}
-//       account: {listAccounts: mockListAccounts}
-//     }}}};
-//     });
-
-// import { Account } from 'coinbase-pro-node';
-
 let mockCtx: MockContext
 let ctx: Context
 
@@ -46,16 +36,6 @@ jest.mock('coinbase-pro-node', () => {
         account: {listAccounts: mockListAccounts}}}
     }}});
 
-    // { authedClient: '{"rest":{"account":{}}}' }
-
-// jest.mock('coinbase-pro-node', () => {
-//     return {CoinbasePro: function() {
-//       return {rest: {
-//         account: {listAccounts: () => new Promise(resolve => resolve(returnedAccounts))}}}
-//     }}});
-
-// { authedClient: '{"rest":{"account":{}}}' }
-
 beforeEach(() => {
     mockCtx = createMockContext()
     ctx = (mockCtx as unknown) as Context
@@ -80,7 +60,7 @@ describe('Coinbase Link', () => {
             passphrase,
             useSandbox);
 
-        expect(status).toEqual(true);
+        expect(status).toEqual(returnedAccounts);
     });
 
     it('Link Account - Sandbox', async () => {
@@ -99,7 +79,7 @@ describe('Coinbase Link', () => {
             passphrase,
             useSandbox);
 
-        expect(status).toEqual(true);
+        expect(status).toEqual(returnedAccounts);
     });
 
     it('Save Coinbase Pro Credentials - Valid Account', async () => {
@@ -135,10 +115,6 @@ describe('Coinbase Link', () => {
         const secret = 'bnl1g362ii';
         const passphrase = 'qmbo73f8b5';
 
-        mockListAccounts.mockImplementationOnce(()=>
-            new Promise(resolve => resolve(returnedAccounts))
-        );
-
         await expect(saveCoinbaseProCredentials(
             ctx,
             accountStatus,
@@ -157,33 +133,16 @@ describe('Coinbase Link', () => {
         const passphrase = '';
         const useSandbox = true;
 
-
-        // jest.doMock('coinbase-pro-node', () => {
-        //     return {CoinbasePro: function() {
-        //       return {rest: {
-        //         account: {listAccounts: () => {
-        //             throw new Error('dasdad')
-        //       }}}}
-        //     }}});
-
-        mockListAccounts.mockImplementationOnce(()=> {throw new Error('asd')}
+        mockListAccounts.mockImplementationOnce(()=> new Promise((resolve, reject) => {
+            reject(new Error("reject 1"));
+        })
         );
-    
-    
 
-        // const status = await getCoinbaseProStatus(
-        //     key,
-        //     secret,
-        //     passphrase,
-        //     useSandbox);
-
-            // console.log(status)
-
-        expect(await getCoinbaseProStatus(
+        await expect(getCoinbaseProStatus(
             key,
             secret,
             passphrase,
-            useSandbox)).rejects.toMatch('asdas')
+            useSandbox)).rejects.toThrow('Invalid Coinbase Pro Account')
     });
 
   });
