@@ -29,14 +29,12 @@ const investorSchema = Joi.object({
     email: Joi.string().email().required()
   });
 
-app.post( '/sign-up', async ( req, res ) => {
-    let value;
+app.post( '/sign-up', async ( req, res, next ) => {
     try {
-        value = await investorSchema.validateAsync(req.body)
+        await investorSchema.validateAsync(req.body)
     } catch (err) {
         logger().info(err);
-        res.statusCode = 400;
-        return res.send({
+        return res.status(400).send({
           status: 'error',
           message: 'Invalid request data',
         });
@@ -63,8 +61,24 @@ app.post( '/sign-up', async ( req, res ) => {
     }
 });
 
+const coinbaseApiKeySchema = Joi.object({
+    nickname: Joi.string().optional(),
+    key: Joi.string().required(),
+    secret: Joi.string().required(),
+    passphrase: Joi.string().required(),
+    useSandbox: Joi.boolean().required(),
+  });
+
 app.post( '/link-account', async ( req, res, next ) => {
-    logger().info(request.body)
+    try {
+        await coinbaseApiKeySchema.validateAsync(req.body)
+    } catch (err) {
+        logger().info(err);
+        return res.status(400).send({
+          status: 'error',
+          message: 'Invalid request data',
+        });
+    }
     const nickname = req.body.nickname;
     const key = req.body.key;
     const secret = req.body.secret;
@@ -72,7 +86,7 @@ app.post( '/link-account', async ( req, res, next ) => {
     const useSandbox = (req.body.useSandbox === 'true');
 
     // @todo write test to check sandbox boolean
-
+    const successMessage = 'Coinbase Pro account added!';
     try {
         logger().info({'useSandbox': useSandbox});
         const accounts = await getCoinbaseProStatus(key, secret, passphrase, useSandbox);
@@ -85,7 +99,7 @@ app.post( '/link-account', async ( req, res, next ) => {
             throw new Error('No valid trading accounts found')
         }
 
-        saveCoinbaseProCredentials(
+        await saveCoinbaseProCredentials(
             { prisma },
             accountStatus,
             dummyInvestorId,
@@ -94,21 +108,19 @@ app.post( '/link-account', async ( req, res, next ) => {
             passphrase,
             secret,
             )
-        logger().info('Coinbase Pro account active!');
+        logger().info(successMessage);
+        res.status(201).send({
+            status: 'true',
+            message: successMessage
+        });
     } catch (error) {
-        res.statusCode = 400;
-        logger().error(error.toString());
-        return res.send({
+        res.status(400).send({
             status: 'error',
-            message: error.toString(),
+            message: 'Could not verify Coinbase Pro credentials',
           });
+        logger().error(error.toString());
+        next(error);
     }
-
-    res.statusCode = 201;
-    res.send({
-        status: 'true',
-        message: 'Coinbase Pro account active!'
-    });
 } );
 
 export default app;

@@ -1,14 +1,12 @@
-// import logo from './jira_notion_sync.svg';
-import './App.css';
 import LinkAccount from './components/linkAccount/linkAccount';
+import Layout from './Layout';
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
+      <Layout>
         <LinkAccount></LinkAccount>
-        {/* <img src={logo} className="App-logo" alt="logo" /> */}
-      </header>
+      </Layout>
     </div>
   );
 }

@@ -51,17 +51,22 @@ async function saveCoinbaseProCredentials(
     secret: string,
     passphrase: string
 ) {
-    if (accountStatus) {
-        createCoinbaseProAccount(
-            investorId,
-            nickname,
-            key,
-            passphrase,
-            secret,
-            prisma,
-        )
+    if (!accountStatus) {
+        throw new Error('Coinbase API Account is not active.');
     } else {
-        throw new Error('Error saving database credentials');
+        try {
+            await createCoinbaseProAccount(
+                investorId,
+                nickname,
+                key,
+                passphrase,
+                secret,
+                prisma,
+            )
+        } catch (err) {
+            logger().error(err);
+            throw new Error('Error saving database credentials.');
+        }
     }
     return true
 }

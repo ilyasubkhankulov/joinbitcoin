@@ -31,7 +31,7 @@ const returnedAccounts = [
 ];
 
 jest.mock('coinbase-pro-node', () => {
-    return {CoinbasePro: function() {
+    return {CoinbasePro: function() { // tslint:disable-line
       return {rest: {
         account: {listAccounts: mockListAccounts}}}
     }}});
@@ -90,7 +90,7 @@ describe('Coinbase Link', () => {
         const secret = 'bnl1g362ii';
         const passphrase = 'qmbo73f8b5';
 
-        (createCoinbaseProAccount as jest.Mock).mockReturnValue(Promise.resolve({
+        (createCoinbaseProAccount as jest.Mock).mockReturnValueOnce(Promise.resolve({
             'id': 'asdad',
         }));
 
@@ -105,6 +105,28 @@ describe('Coinbase Link', () => {
         );
 
         expect(status).toEqual(true);
+    });
+
+    it('Save Coinbase Pro Credentials - Error saving to db', async () => {
+        const accountStatus = true;
+        const investorId = '924a96cc-8af9-41ed-8ce7-12ea32827514';
+        const nickname = 'nickname';
+        const key = 'owo050jiki';
+        const secret = 'bnl1g362ii';
+        const passphrase = 'qmbo73f8b5';
+
+        (createCoinbaseProAccount as jest.Mock).mockRejectedValueOnce('Error saving database credentials.');
+
+        await expect(saveCoinbaseProCredentials(
+            ctx,
+            accountStatus,
+            investorId,
+            nickname,
+            key,
+            secret,
+            passphrase
+        )).rejects
+        .toThrow('Error saving database credentials.');
     });
 
     it('Save Coinbase Pro Credentials - Error saving credentials', async () => {
@@ -124,7 +146,7 @@ describe('Coinbase Link', () => {
             secret,
             passphrase
         )).rejects
-        .toThrow('Error saving database credentials');
+        .toThrow('Coinbase API Account is not active.');
     });
 
     it('Link Account - Invalid credentials', async () => {
