@@ -123,4 +123,17 @@ app.post( '/link-account', async ( req, res, next ) => {
     }
 } );
 
+
+const coinbaseApiKeySchema = Joi.object({
+    nickname: Joi.string().optional(),
+    key: Joi.string().required(),
+    secret: Joi.string().required(),
+    passphrase: Joi.string().required(),
+    useSandbox: Joi.boolean().required(),
+  });
+
+app.post( '/create-plan', async ( req, res, next ) => {
+
+});
+
 export default app;
