@@ -124,15 +124,18 @@ app.post( '/link-account', async ( req, res, next ) => {
 } );
 
 
-const coinbaseApiKeySchema = Joi.object({
-    nickname: Joi.string().optional(),
-    key: Joi.string().required(),
-    secret: Joi.string().required(),
-    passphrase: Joi.string().required(),
-    useSandbox: Joi.boolean().required(),
+const InvestmentPlanSchema = Joi.object({
+    frequency: Joi.string().optional(),
+    amount: Joi.string().optional(),
+    currency: Joi.string().optional(),
   });
 
 app.post( '/create-plan', async ( req, res, next ) => {
+    // pseudo code
+    // 1. verify inputs
+    // 2. validate that they completed the previous onboarding step
+    // 3. 
+
 
 });
 
