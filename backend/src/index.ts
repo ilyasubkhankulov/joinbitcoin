@@ -158,7 +158,7 @@ app.post('/create-plan', async ( req, res, next ) => {
             { prisma },
             dummyInvestorId);
     } catch (err) {
-        logger().log(err);
+        logger().info(err);
         return res.status(400).send({
             status: 'error',
             message: 'No valid trading account exists',
@@ -180,7 +180,7 @@ app.post('/create-plan', async ( req, res, next ) => {
         res.statusCode = 400;
         return res.send({
             status: 'error',
-            message: 'ERROR 123',
+            message: 'Could not create investment plan',
           });
     }
 

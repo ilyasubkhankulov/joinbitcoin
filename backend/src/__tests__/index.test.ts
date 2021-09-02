@@ -8,8 +8,9 @@ jest.mock('../repo');
 jest.mock('../coinbase-pro');
 
 import uuid from 'uuid';
-import { createInvestor } from '../repo';
-import { getCoinbaseProStatus, saveCoinbaseProCredentials } from '../coinbase-pro';
+import { createInvestmentPlan, createInvestor } from '../repo';
+import { getCoinbaseProStatus, saveCoinbaseProCredentials, verifyValidAccountExists } from '../coinbase-pro';
+import { JestMockExtended } from 'jest-mock-extended';
 
 const returnedAccounts = [
   {
@@ -279,25 +280,32 @@ describe('POST /link-account - test link account endpoint with mocked database f
 });
 
 describe('POST /create-plan - ...', () => {
-  // it('Create Plan API Request - Returns 201 (success)', async () => {
-  //   const planRequest = {
-  //     currency: 'USD',
-  //     amount: '10',
-  //     frequency: 'week',
-  //   };
+  it('Create Plan API Request - Returns 201 (success)', async () => {
+    const investmentPlan = {
+      currency: 'USD',
+      amount: '10',
+      frequency: 'week',
+    };
 
-  //   // const mockResponseGetCoinbaseProStatus = returnedAccounts;
-  //   // (getCoinbaseProStatus as jest.Mock).mockReturnValueOnce(mockResponseGetCoinbaseProStatus);
+    const mockedAccountId = '8fcc0e76-f9ee-47f6-9fb1-a11e44b75cab';
+    const mockedPlan = {
+      investor_id: "8fcc0e76-f9ee-47f6-9fb1-a11e44b75cab",
+      id: "79655efa-ba4c-4a8e-9b00-2b839a86a8b6",
+    };
 
-  //   // (saveCoinbaseProCredentials as jest.Mock).mockReturnValueOnce(true);
+    (verifyValidAccountExists as jest.Mock).mockResolvedValueOnce(mockedAccountId);
+    (createInvestmentPlan as jest.Mock).mockReturnValueOnce(Promise.resolve(mockedPlan));
 
-  //   await request(app).post('/create-plan').send(planRequest).expect(201)
-  //   .expect({
-  //     status: 'true',
-  //     message: 'Investment plan account created',
-  //     next_step: ''
-  //   });
-  // });
+    await request(app).post('/create-plan').send(investmentPlan).expect(201)
+    .expect({
+      "status": "success",
+      "message": "Investor created successfully",
+      "data": {
+          "investor_id": mockedPlan.investor_id,
+          "plan_id": mockedPlan.id,
+      }
+    });
+  });
 
   it('Create Investment Plan Request - Throws Error (request schema invalid)', async () => {
     const investmentPlan = {
@@ -311,6 +319,54 @@ describe('POST /create-plan - ...', () => {
     .expect({
       status: 'error',
       message: 'Invalid investment plan definition',
+    })
+  });
+
+  it('Create Investment Plan Request - Throws Error (invalid account)', async () => {
+    const investmentPlan = {
+      currency: 'USD',
+      amount: '10',
+      frequency: 'week',
+    };
+
+    const mockedAccountId = '8fcc0e76-f9ee-47f6-9fb1-a11e44b75cab';
+    const mockedPlan = {
+      investor_id: "8fcc0e76-f9ee-47f6-9fb1-a11e44b75cab",
+      id: "79655efa-ba4c-4a8e-9b00-2b839a86a8b6",
+    };
+
+    (verifyValidAccountExists as jest.Mock).mockRejectedValueOnce(Promise.resolve(new Error('Error saving database credentials.')))
+    // (createInvestmentPlan as jest.Mock).mockReturnValueOnce(Promise.resolve(mockedPlan));
+
+    await request(app).post('/create-plan').send(investmentPlan).expect(400)
+    .expect('Content-Type', /json/)
+    .expect({
+      status: 'error',
+      message: 'No valid trading account exists',
+    })
+  });
+
+  it('Create Investment Plan Request - Throws Error (failed to create plan in db)', async () => {
+    const investmentPlan = {
+      currency: 'USD',
+      amount: '10',
+      frequency: 'week',
+    };
+
+    const mockedAccountId = '8fcc0e76-f9ee-47f6-9fb1-a11e44b75cab';
+    const mockedPlan = {
+      investor_id: "8fcc0e76-f9ee-47f6-9fb1-a11e44b75cab",
+      id: "79655efa-ba4c-4a8e-9b00-2b839a86a8b6",
+    };
+
+    (verifyValidAccountExists as jest.Mock).mockResolvedValueOnce(mockedAccountId);
+    (createInvestmentPlan as jest.Mock).mockRejectedValueOnce(Promise.resolve(new Error('Could not create investment plan')))
+
+    await request(app).post('/create-plan').send(investmentPlan).expect(400)
+    .expect('Content-Type', /json/)
+    .expect({
+      status: 'error',
+      message: 'Could not create investment plan',
     })
   });
 });
