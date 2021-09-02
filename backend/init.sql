@@ -7,10 +7,10 @@ drop type IF EXISTS plan_status CASCADE;
 drop type IF EXISTS auditlog_action CASCADE;
 drop type IF EXISTS order_type CASCADE;
 drop type IF EXISTS trade_status CASCADE;
-drop schema IF EXISTS connected CASCADE;
+drop type if exists plan_freq cascade;
+
 drop table IF EXISTS exchange_coinbasepro CASCADE;
 
-drop type if exists plan_freq cascade;
 drop table IF EXISTS coinbasepro CASCADE ;
 drop table IF EXISTS investor CASCADE ;
 drop table IF EXISTS account CASCADE ;
@@ -20,7 +20,6 @@ drop table IF EXISTS auditlog CASCADE;
 
 drop table IF EXISTS plan CASCADE;
 
-
 -- create update function
 CREATE OR REPLACE FUNCTION trigger_set_timestamp()
 RETURNS TRIGGER AS $$
@@ -29,9 +28,6 @@ BEGIN
   RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
-
--- create schemas
-
 
 --create schema IF NOT EXISTS connected ;
 -- create
@@ -64,6 +60,11 @@ CREATE TYPE "auditlog_action" AS ENUM (
   'update_plan'
 );
 
+CREATE TYPE "account_status" AS ENUM (
+  'Active',
+  'Invalid'
+);
+
 CREATE TABLE "investor" (
   "id" uuid PRIMARY KEY,
   "email" varchar UNIQUE,
@@ -74,6 +75,7 @@ CREATE TABLE "investor" (
 CREATE TABLE "account" (
   "id" uuid PRIMARY KEY,
   "investor_id" uuid NOT NULL UNIQUE,
+  "status" account_status NOT NULL,
   "exchange" varchar NOT NULL,
   "updated_at" timestamptz NOT NULL DEFAULT NOW(),
   "created_at" timestamptz NOT NULL DEFAULT NOW()
@@ -104,8 +106,7 @@ CREATE TABLE "plan" (
   "id" uuid PRIMARY KEY,
   "account_id" uuid NOT NULL UNIQUE,
   "status" plan_status NOT NULL,
-  "frequency" integer NOT NULL,
-  "amount" numeric(1000,0) NOT NULL,
+  "definition" jsonb NOT NULL,
   "updated_at" timestamptz NOT NULL DEFAULT NOW(),
   "created_at" timestamptz NOT NULL DEFAULT NOW()
 );
@@ -156,8 +157,6 @@ CREATE INDEX "unique_account_currency" ON "account_balance" ("account_id", "curr
 CREATE UNIQUE INDEX ON "account_balance" ("id");
 
 COMMENT ON COLUMN "account"."exchange" IS 'Financial exchange or brokerage';
-
-COMMENT ON COLUMN "plan"."frequency" IS 'in minutes';
 
 -- update triggers
 

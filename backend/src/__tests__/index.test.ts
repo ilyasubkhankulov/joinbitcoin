@@ -128,7 +128,7 @@ describe('POST /sign-up - test sign up endpoint with mocked database function', 
     expect(result.body.status).toBeDefined();
     expect(result.body.message).toBeDefined();
     expect(result.body.status).toBe('error');
-    expect(result.body.message).toBe('Invalid request data');
+    expect(result.body.message).toBe('Invalid Coinbase Pro API credentials');
   });
 });
 
@@ -209,9 +209,9 @@ describe('POST /link-account - test link account endpoint with mocked database f
 
     await request(app).post('/link-account').send(coinbaseProAccount).expect(400)
     .expect('Content-Type', /json/)
-    expect({
+    .expect({
       status: 'error',
-      message: 'Invalid Coinbase Pro API credentials',
+      message: 'Could not verify Coinbase Pro credentials',
     })
   });
 
@@ -230,9 +230,9 @@ describe('POST /link-account - test link account endpoint with mocked database f
 
     await request(app).post('/link-account').send(coinbaseProAccount).expect(400)
     .expect('Content-Type', /json/)
-    expect({
+    .expect({
       status: 'error',
-      message: 'Invalid Coinbase Pro API credentials',
+      message: 'Could not verify Coinbase Pro credentials',
     })
   });
 
@@ -251,9 +251,9 @@ describe('POST /link-account - test link account endpoint with mocked database f
 
     await request(app).post('/link-account').send(coinbaseProAccount).expect(400)
     .expect('Content-Type', /json/)
-    expect({
+    .expect({
       status: 'error',
-      message: 'Invalid Coinbase Pro API credentials',
+      message: 'Invalid request data',
     })
   });
 
@@ -271,9 +271,46 @@ describe('POST /link-account - test link account endpoint with mocked database f
 
     await request(app).post('/link-account').send(coinbaseProAccount).expect(400)
     .expect('Content-Type', /json/)
-    expect({
+    .expect({
       status: 'error',
-      message: 'Invalid Coinbase Pro API credentials',
+      message: 'Could not verify Coinbase Pro credentials',
+    })
+  });
+});
+
+describe('POST /create-plan - ...', () => {
+  // it('Create Plan API Request - Returns 201 (success)', async () => {
+  //   const planRequest = {
+  //     currency: 'USD',
+  //     amount: '10',
+  //     frequency: 'week',
+  //   };
+
+  //   // const mockResponseGetCoinbaseProStatus = returnedAccounts;
+  //   // (getCoinbaseProStatus as jest.Mock).mockReturnValueOnce(mockResponseGetCoinbaseProStatus);
+
+  //   // (saveCoinbaseProCredentials as jest.Mock).mockReturnValueOnce(true);
+
+  //   await request(app).post('/create-plan').send(planRequest).expect(201)
+  //   .expect({
+  //     status: 'true',
+  //     message: 'Investment plan account created',
+  //     next_step: ''
+  //   });
+  // });
+
+  it('Create Investment Plan Request - Throws Error (request schema invalid)', async () => {
+    const investmentPlan = {
+      currency: 'USD',
+      amount: '10',
+      // missing frequency
+    };
+
+    await request(app).post('/create-plan').send(investmentPlan).expect(400)
+    .expect('Content-Type', /json/)
+    .expect({
+      status: 'error',
+      message: 'Invalid investment plan definition',
     })
   });
 });

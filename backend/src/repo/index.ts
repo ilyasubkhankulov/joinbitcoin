@@ -49,6 +49,7 @@ async function createInvestor(
     const newCoinbaseProAccount = await ctx.prisma.account.create({
       data: {
         id: accountId,
+        status: 'Active',
         investor_id: investorId,
         exchange,
         exchange_coinbasepro: {
@@ -73,7 +74,75 @@ async function createInvestor(
   }
 }
 
+/**
+ * A function that creates an 'investor' object in the database
+ * @param {string} investorId
+ * @param {PrismaClient} ctx
+ * @return {object}
+ */
+ async function getValidAccount(
+  investorId: string,
+  ctx: Context,
+) {
+  try {
+    const account = await ctx.prisma.account.findFirst({
+      where: {
+        investor_id: investorId,
+        status: 'Active',
+      },
+    });
+    return account;
+  }
+  catch (error) {
+    logger().error(error)
+    throw new Error(error);
+  }
+}
+
+/**
+ * A function that creates a 'plan' object
+ * @param {string} accountId
+ * @param {string} frequency
+ * @param {string} currency
+ * @param {string} amount
+ * @param {PrismaClient} ctx
+ * @return {object}
+ */
+ async function createInvestmentPlan(
+  accountId: string,
+  frequency: string,
+  currency: string,
+  amount: string,
+  ctx: Context,
+ ) {
+ const investmentPlanId = v4();
+ try {
+   const planDefinition = {
+    frequency,
+    currency,
+    amount,
+   };
+   const newInvestmentPlan = await ctx.prisma.plan.create({
+     data: {
+       id: investmentPlanId,
+       account_id: accountId,
+       definition: planDefinition,
+       status: 'Disabled',
+     },
+   })
+   return newInvestmentPlan;
+ }
+ catch (err) {
+   const errMessage = `Could not save Coinbase Pro credentials: ${err}`
+   logger().error(errMessage)
+   throw new Error(errMessage);
+ }
+}
+
+
 export {
     createInvestor,
-    createCoinbaseProAccount
+    createCoinbaseProAccount,
+    getValidAccount,
+    createInvestmentPlan,
 }

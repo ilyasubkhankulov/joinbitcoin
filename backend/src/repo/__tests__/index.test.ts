@@ -1,3 +1,4 @@
+import { account_status } from '@prisma/client';
 import { MockContext, Context, createMockContext } from '../../context'
 
 import { createInvestor, createCoinbaseProAccount } from '../index';
@@ -42,6 +43,7 @@ describe('Repository', () => {
       const account = {
           id: 'f38e36b5-eb6f-4a9d-b455-d54c52b6d376',
           investor_id: '924a96cc-8af9-41ed-8ce7-12ea32827514',
+          status: account_status.Active,
           exchange: 'coinbasepro',
           updated_at: new Date('2019-01-16'),
           created_at: new Date('2019-01-16'),

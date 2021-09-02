@@ -2,7 +2,7 @@ import { CoinbasePro, Account} from 'coinbase-pro-node';
 import logger from 'pino';
 
 import { Context } from '../context';
-import { createCoinbaseProAccount } from '../repo';
+import { createCoinbaseProAccount, getValidAccount } from '../repo';
 
 /**
  * A function that verifies coinbase pro credentials
@@ -71,7 +71,32 @@ async function saveCoinbaseProCredentials(
     return true
 }
 
+
+/**
+ * A function that saves coinbase pro credentials to the database
+ * @param {Context} prisma
+ * @param {string} investorId
+ * @return boolean
+ */
+ async function verifyValidAccountExists(
+    prisma: Context,
+    investorId: string,
+) {
+    try {
+        const validAccount:any = await getValidAccount(
+            investorId,
+            prisma,
+        )
+        return validAccount.id
+    } catch (err) {
+        logger().error(err);
+        throw new Error('Error saving database credentials.');
+    }
+}
+
+
 export {
     getCoinbaseProStatus,
-    saveCoinbaseProCredentials
+    saveCoinbaseProCredentials,
+    verifyValidAccountExists,
 }
