@@ -134,11 +134,6 @@ const investmentPlanSchema = Joi.object({
   });
 
 app.post('/create-plan', async ( req, res, next ) => {
-    // pseudo code
-    // 1. verify inputs
-    // 2. validate that they completed the previous onboarding step
-    // 3. save job in db
-
     try {
         await investmentPlanSchema.validateAsync(req.body)
     } catch (err) {

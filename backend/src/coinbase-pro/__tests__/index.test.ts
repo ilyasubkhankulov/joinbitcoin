@@ -1,6 +1,6 @@
 import { MockContext, Context, createMockContext } from '../../context'
-import { getCoinbaseProStatus, saveCoinbaseProCredentials } from '../index';
-import { createCoinbaseProAccount } from '../../repo';
+import { getCoinbaseProStatus, saveCoinbaseProCredentials, verifyValidAccountExists } from '../index';
+import { createCoinbaseProAccount, getValidAccount} from '../../repo';
 
 jest.mock('../../repo');
 
@@ -167,4 +167,39 @@ describe('Coinbase Link', () => {
             useSandbox)).rejects.toThrow('Invalid Coinbase Pro Account')
     });
 
+    it('Verify Valid Account exists - valid account does exist', async () => {
+        const investor_id = '393390ea-1370-4476-bef1-ef3c3b589570';
+        const dummyAccount = {
+            'id': 'f1c2c703-e21b-43f1-ad74-fbcbe85aab7a',
+            'investor_id': '8fcc0e76-f9ee-47f6-9fb1-a11e44b75cab',
+            'status': 'Active',
+            'exchange': 'coinbasepro',
+            'updated_at': '2021-09-02 03:08:20.698-07',
+            'created_at': '2021-09-02 03:08:20.698-07'
+        };
+
+        (getValidAccount as jest.Mock).mockImplementationOnce(()=>
+            new Promise(resolve => resolve(dummyAccount))
+        );
+
+        const account = await verifyValidAccountExists(
+            ctx,
+            investor_id,
+            );
+
+        expect(account).toEqual(dummyAccount.id);
+    });
+
+    it('Verify Valid Account exists - valid account does NOT exist', async () => {
+        const investor_id = '393390ea-1370-4476-bef1-ef3c3b589570';
+
+        (getValidAccount as jest.Mock).mockImplementationOnce(()=> new Promise((resolve, reject) => {
+            reject(new Error('reject 1'));
+        }));
+
+        await expect(verifyValidAccountExists(
+            ctx,
+            investor_id,
+            )).rejects.toThrow('Error finding a valid coinbase pro account.')
+    });
   });

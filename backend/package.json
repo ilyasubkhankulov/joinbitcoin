@@ -9,7 +9,7 @@
     "prestart": "npm run build",
     "prepare": "husky install",
     "start": "node --unhandled-rejections=strict --inspect=5858 -r ts-node/register ./src/server.ts | pino-pretty",
-    "start:watch": "nodemon",
+    "start:watch": "nodemon --inspect",
     "test": "jest -i"
   },
   "engines": {

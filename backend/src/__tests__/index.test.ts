@@ -289,8 +289,8 @@ describe('POST /create-plan - ...', () => {
 
     const mockedAccountId = '8fcc0e76-f9ee-47f6-9fb1-a11e44b75cab';
     const mockedPlan = {
-      investor_id: "8fcc0e76-f9ee-47f6-9fb1-a11e44b75cab",
-      id: "79655efa-ba4c-4a8e-9b00-2b839a86a8b6",
+      investor_id: '8fcc0e76-f9ee-47f6-9fb1-a11e44b75cab',
+      id: '79655efa-ba4c-4a8e-9b00-2b839a86a8b6',
     };
 
     (verifyValidAccountExists as jest.Mock).mockResolvedValueOnce(mockedAccountId);
@@ -298,11 +298,11 @@ describe('POST /create-plan - ...', () => {
 
     await request(app).post('/create-plan').send(investmentPlan).expect(201)
     .expect({
-      "status": "success",
-      "message": "Investor created successfully",
-      "data": {
-          "investor_id": mockedPlan.investor_id,
-          "plan_id": mockedPlan.id,
+      'status': 'success',
+      'message': 'Investor created successfully',
+      'data': {
+          'investor_id': mockedPlan.investor_id,
+          'plan_id': mockedPlan.id,
       }
     });
   });
@@ -331,8 +331,8 @@ describe('POST /create-plan - ...', () => {
 
     const mockedAccountId = '8fcc0e76-f9ee-47f6-9fb1-a11e44b75cab';
     const mockedPlan = {
-      investor_id: "8fcc0e76-f9ee-47f6-9fb1-a11e44b75cab",
-      id: "79655efa-ba4c-4a8e-9b00-2b839a86a8b6",
+      investor_id: '8fcc0e76-f9ee-47f6-9fb1-a11e44b75cab',
+      id: '79655efa-ba4c-4a8e-9b00-2b839a86a8b6',
     };
 
     (verifyValidAccountExists as jest.Mock).mockRejectedValueOnce(Promise.resolve(new Error('Error saving database credentials.')))
@@ -355,8 +355,8 @@ describe('POST /create-plan - ...', () => {
 
     const mockedAccountId = '8fcc0e76-f9ee-47f6-9fb1-a11e44b75cab';
     const mockedPlan = {
-      investor_id: "8fcc0e76-f9ee-47f6-9fb1-a11e44b75cab",
-      id: "79655efa-ba4c-4a8e-9b00-2b839a86a8b6",
+      investor_id: '8fcc0e76-f9ee-47f6-9fb1-a11e44b75cab',
+      id: '79655efa-ba4c-4a8e-9b00-2b839a86a8b6',
     };
 
     (verifyValidAccountExists as jest.Mock).mockResolvedValueOnce(mockedAccountId);

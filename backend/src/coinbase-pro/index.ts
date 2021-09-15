@@ -73,7 +73,7 @@ async function saveCoinbaseProCredentials(
 
 
 /**
- * A function that saves coinbase pro credentials to the database
+ * A function that checks if a valid coinbase pro account exists
  * @param {Context} prisma
  * @param {string} investorId
  * @return boolean
@@ -90,7 +90,7 @@ async function saveCoinbaseProCredentials(
         return validAccount.id
     } catch (err) {
         logger().error(err);
-        throw new Error('Error saving database credentials.');
+        throw new Error('Error finding a valid coinbase pro account.');
     }
 }
 
