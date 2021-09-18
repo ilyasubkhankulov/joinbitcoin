@@ -2,16 +2,13 @@ import { Fragment, useState } from 'react'
 import { Dialog, Menu, Transition } from '@headlessui/react'
 import {
   BellIcon,
+  ChartBarIcon,
   HomeIcon,
   MenuAlt2Icon,
-  UsersIcon,
   XIcon,
 } from '@heroicons/react/outline'
+import { UsersIcon } from '@heroicons/react/solid'
 
-const navigation = [
-  { name: 'Dashboard', href: '#', icon: HomeIcon, current: true },
-  { name: 'Account', href: '#', icon: UsersIcon, current: false },
-]
 const userNavigation = [
   { name: 'Your Profile', href: '#' },
   { name: 'Settings', href: '#' },
@@ -24,6 +21,16 @@ function classNames(...classes) {
 
 export default function Layout(props) {
   const [sidebarOpen, setSidebarOpen] = useState(false)
+
+  const { currentPage } = props;
+
+  const navigation = [
+    { name: 'Dashboard', href: '/', icon: HomeIcon, current: false },
+    { name: 'Account', href: '/account', icon: UsersIcon, current: false },
+    { name: 'Invest', href: '/invest', icon: ChartBarIcon, current: false },
+  ]
+
+  navigation.find(page => page.name == currentPage).current = true;
 
   return (
     <div className="h-screen flex overflow-hidden bg-gray-100">

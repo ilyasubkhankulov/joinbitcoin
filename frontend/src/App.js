@@ -1,13 +1,23 @@
-import LinkAccount from './components/linkAccount/linkAccount';
-import Layout from './Layout';
+import {
+  BrowserRouter,
+  Route,
+  Routes,
+  // Link
+} from "react-router-dom";
+
+import Invest from './components/invest/Invest';
+import LinkAccount from './components/linkAccount/LinkAccount';
+import Dashboard from './components/dashboard/Dashboard';
 
 function App() {
   return (
-    <div className="App">
-      <Layout>
-        <LinkAccount></LinkAccount>
-      </Layout>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Dashboard />} />
+        <Route path="/account" element={<LinkAccount />} />
+        <Route path="/invest" element={<Invest />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 
