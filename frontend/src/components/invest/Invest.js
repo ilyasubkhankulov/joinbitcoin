@@ -22,8 +22,7 @@ export default class Invest extends React.Component {
         };
         
         this.pages = [
-          { name: 'Account', href: 'http://localhost:3001', current: false },
-          { name: 'Link Trading Account', href: 'http://localhost:3001', current: true },
+          { name: 'Invest', href: 'http://localhost:3001', current: true },
         ]
   
     //   this.handleChange = this.handleChange.bind(this);
@@ -134,67 +133,77 @@ export default class Invest extends React.Component {
                   <h3 className="text-lg leading-6 font-medium text-gray-900">Investment Plans</h3>
                   <p className="mt-1 text-sm text-gray-500">Manage your pre-scheduled investments.</p>
                 </div>
+                <fieldset className="mt-6">
+                  <div>
+                    <legend className="text-base font-medium text-gray-900">Purchase Frequency</legend>
+                    <p className="text-sm text-gray-500">How often do you want to make purchases?</p>
+                  </div>
+                  <div className="mt-4 space-y-4">
+                    <div className="flex items-center">
+                      <input
+                        id="frequency_daily"
+                        name="purchase_frequency"
+                        type="radio"
+                        className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300"
+                      />
+                      <label htmlFor="frequency_daily" className="ml-3 block text-sm font-medium text-gray-700">
+                        Daily
+                      </label>
+                    </div>
+                    <div className="flex items-center">
+                      <input
+                        id="frequency_weekly"
+                        name="purchase_frequency"
+                        type="radio"
+                        className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300"
+                      />
+                      <label htmlFor="frequency_weekly" className="ml-3 block text-sm font-medium text-gray-700">
+                        Weekly
+                      </label>
+                    </div>
+                    <div className="flex items-center">
+                      <input
+                        id="frequency_monthly"
+                        name="purchase_frequency"
+                        type="radio"
+                        className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300"
+                      />
+                      <label htmlFor="frequency_monthly" className="ml-3 block text-sm font-medium text-gray-700">
+                        Monthly
+                      </label>
+                    </div>
+                  </div>
+
+                  <div>
+                    <legend className="mt-6 text-base font-medium text-gray-900">Purchase Size and Currency</legend>
+                    <p className="text-sm text-gray-500">How much do you want to invest? Which coin?</p>
+                </div>  
+      <div className="mt-3 relative rounded-md shadow-sm">
+        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+          <span className="text-gray-500 sm:text-sm">$</span>
+        </div>
+        <input
+          type="text"
+          name="price"
+          id="price"
+          className="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-7 pr-12 sm:text-sm border-gray-300 rounded-md"
+          placeholder="0.00"
+          aria-describedby="price-currency"
+        />
+        <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+          <span className="text-gray-500 sm:text-sm" id="price-currency">
+            USD
+          </span>
+        </div>
+      </div>
 
                   
+                </fieldset>
 
-
-            <div className="pt-6 sm:pt-5">
-              <div role="group" aria-labelledby="label-notifications">
-                <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-baseline">
-                  <div>
-                    <div
-                      className="text-base font-medium text-gray-900 sm:text-sm sm:text-gray-700"
-                      id="label-notifications"
-                    >
-                      Push Notifications
-                    </div>
-                  </div>
-                  <div className="sm:col-span-2">
-                    <div className="max-w-lg">
-                      <p className="text-sm text-gray-500">These are delivered via SMS to your mobile phone.</p>
-                      <div className="mt-4 space-y-4">
-                        <div className="flex items-center">
-                          <input
-                            id="push_everything"
-                            name="push_notifications"
-                            type="radio"
-                            className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300"
-                          />
-                          <label htmlFor="push_everything" className="ml-3 block text-sm font-medium text-gray-700">
-                            Everything
-                          </label>
-                        </div>
-                        <div className="flex items-center">
-                          <input
-                            id="push_email"
-                            name="push_notifications"
-                            type="radio"
-                            className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300"
-                          />
-                          <label htmlFor="push_email" className="ml-3 block text-sm font-medium text-gray-700">
-                            Same as email
-                          </label>
-                        </div>
-                        <div className="flex items-center">
-                          <input
-                            id="push_nothing"
-                            name="push_notifications"
-                            type="radio"
-                            className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300"
-                          />
-                          <label htmlFor="push_nothing" className="ml-3 block text-sm font-medium text-gray-700">
-                            No push notifications
-                          </label>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          
-
-
+                <div>
+      
+                
+    </div>
 
                 </div>
               </div>
