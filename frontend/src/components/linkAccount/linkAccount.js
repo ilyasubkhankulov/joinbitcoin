@@ -22,8 +22,7 @@ export default class LinkAccount extends React.Component {
         };
         
         this.pages = [
-          { name: 'Account', href: 'http://localhost:3001', current: false },
-          { name: 'Link Trading Account', href: 'http://localhost:3001', current: true },
+          { name: 'Account', href: 'http://localhost:3001/account', current: true },
         ]
   
       this.handleChange = this.handleChange.bind(this);
@@ -132,7 +131,7 @@ export default class LinkAccount extends React.Component {
                 <div className="">
                   <div>
                     <h3 className="text-lg leading-6 font-medium text-gray-900">Link your trading account</h3>
-                    <p className="mt-1 text-sm text-gray-500">Enter your Coinbase credentials here.</p>
+                    <p className="mt-1 text-sm text-gray-500">Enter your Coinbase Pro API keys here.</p>
                   </div>
                   <div className="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
 
@@ -165,7 +164,7 @@ export default class LinkAccount extends React.Component {
                           id="key"
                           value={this.state.key} onChange={this.handleChange} 
                           className={`${successMessage ? "text-gray-300 " : null}focus:ring-indigo-500 focus:border-indigo-500 block w-full pr-10 sm:text-sm border-gray-300 rounded-md`}
-                          placeholder="Alphanumeric key generated on Coinbase Pro's platform"
+                          placeholder="Key generated on Coinbase Pro's platform"
                         />
                       </div>
                     </div>
@@ -182,7 +181,7 @@ export default class LinkAccount extends React.Component {
                           id="secret"
                           value={this.state.secret} onChange={this.handleChange} 
                           className={`${successMessage ? "text-gray-300 " : null}focus:ring-indigo-500 focus:border-indigo-500 block w-full pr-10 sm:text-sm border-gray-300 rounded-md`}
-                          placeholder="Alphanumeric secret generated on Coinbase Pro's platform"
+                          placeholder="Secret generated on Coinbase Pro's platform"
                         />
                       </div>
                     </div>
@@ -199,7 +198,7 @@ export default class LinkAccount extends React.Component {
                           id="passphrase"
                           value={this.state.passphrase} onChange={this.handleChange} 
                           className={`${successMessage ? "text-gray-300 " : null}focus:ring-indigo-500 focus:border-indigo-500 block w-full pr-10 sm:text-sm border-gray-300 rounded-md`} 
-                          placeholder="Alphanumeric passphrase generated on Coinbase Pro's platform"
+                          placeholder="Passphrase generated on Coinbase Pro's platform"
                         />
                       </div>
                     </div>

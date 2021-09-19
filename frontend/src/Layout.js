@@ -5,6 +5,7 @@ import {
   ChartBarIcon,
   HomeIcon,
   MenuAlt2Icon,
+  UserGroupIcon,
   XIcon,
 } from '@heroicons/react/outline'
 import { UsersIcon } from '@heroicons/react/solid'
@@ -28,9 +29,10 @@ export default function Layout(props) {
     { name: 'Dashboard', href: '/', icon: HomeIcon, current: false },
     { name: 'Account', href: '/account', icon: UsersIcon, current: false },
     { name: 'Invest', href: '/invest', icon: ChartBarIcon, current: false },
+    { name: 'About', href: '/', icon: UserGroupIcon, current: false },
   ]
 
-  navigation.find(page => page.name == currentPage).current = true;
+  navigation.find(page => page.name === currentPage).current = true;
 
   return (
     <div className="h-screen flex overflow-hidden bg-gray-100">
@@ -248,7 +250,7 @@ export default function Layout(props) {
         <main className="flex-1 relative overflow-y-auto focus:outline-none">
           <div className="py-1 m-2">
             <div className="bg-white overflow-hidden shadow rounded-lg">
-              <div className="px-4 py-5 sm:p-6">
+              <div className="px-4 ml-4 mr-4 py-5 sm:p-6">
                 { props.children }
               </div>
             </div>

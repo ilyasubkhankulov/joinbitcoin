@@ -137,15 +137,15 @@ describe('Repository', () => {
 
     it('Create Investment Plan - Success', async () => {
       const plan = {
-        "id": "79655efa-ba4c-4a8e-9b00-2b839a86a8b6",
-        "account_id": "f1c2c703-e21b-43f1-ad74-fbcbe85aab7a",
-        "status": plan_status.Disabled,
-        "definition": {
-          "amount": "10",
-          "currency": "USD",
-          "frequency": "week"
+        'id': '79655efa-ba4c-4a8e-9b00-2b839a86a8b6',
+        'account_id': 'f1c2c703-e21b-43f1-ad74-fbcbe85aab7a',
+        'status': plan_status.Disabled,
+        'definition': {
+          'amount': '10',
+          'currency': 'USD',
+          'frequency': 'week'
         },
-        "updated_at": new Date('2021-09-02 03:08:20.698-07'),
+        'updated_at': new Date('2021-09-02 03:08:20.698-07'),
         'created_at': new Date('2021-09-02 03:08:20.698-07')
       }
       mockCtx.prisma.plan.create.mockResolvedValue(plan)
@@ -168,15 +168,15 @@ describe('Repository', () => {
 
     it('Create Investment Plan - Error', async () => {
       const plan = {
-        "id": "79655efa-ba4c-4a8e-9b00-2b839a86a8b6",
-        "account_id": "f1c2c703-e21b-43f1-ad74-fbcbe85aab7a",
-        "status": plan_status.Disabled,
-        "definition": {
-          "amount": "10",
-          "currency": "USD",
-          "frequency": "week"
+        'id': '79655efa-ba4c-4a8e-9b00-2b839a86a8b6',
+        'account_id': 'f1c2c703-e21b-43f1-ad74-fbcbe85aab7a',
+        'status': plan_status.Disabled,
+        'definition': {
+          'amount': '10',
+          'currency': 'USD',
+          'frequency': 'week'
         },
-        "updated_at": new Date('2021-09-02 03:08:20.698-07'),
+        'updated_at': new Date('2021-09-02 03:08:20.698-07'),
         'created_at': new Date('2021-09-02 03:08:20.698-07')
       }
       mockCtx.prisma.plan.create.mockRejectedValue('db error');

@@ -128,7 +128,7 @@ app.post( '/link-account', async ( req, res, next ) => {
 
 
 const investmentPlanSchema = Joi.object({
-    frequency: Joi.string().required(),
+    frequency: Joi.string().required().valid('week', 'month', 'day'),
     amount: Joi.string().required(),
     currency: Joi.string().required(),
   });
@@ -140,7 +140,7 @@ app.post('/create-plan', async ( req, res, next ) => {
         logger().info(err);
         return res.status(400).send({
           status: 'error',
-          message: 'Invalid investment plan definition',
+          message: 'Investment plan is missing details, please double-check your input',
         });
     }
     const frequency = req.body.frequency;
@@ -165,7 +165,7 @@ app.post('/create-plan', async ( req, res, next ) => {
         plan = await createInvestmentPlan(accountId, frequency, currency, amount, { prisma });
         return res.status(201).json({
             status: 'success',
-            message: 'Investor created successfully',
+            message: 'Investment plan created successfully',
             data: {
                 'investor_id': dummyInvestorId,
                 'plan_id': plan.id,
@@ -175,7 +175,7 @@ app.post('/create-plan', async ( req, res, next ) => {
         res.statusCode = 400;
         return res.send({
             status: 'error',
-            message: 'Could not create investment plan',
+            message: 'Sorry, we could not save your investment plan due to some technical issue.',
           });
     }
 

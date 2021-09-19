@@ -299,7 +299,7 @@ describe('POST /create-plan - ...', () => {
     await request(app).post('/create-plan').send(investmentPlan).expect(201)
     .expect({
       'status': 'success',
-      'message': 'Investor created successfully',
+      'message': 'Investment plan created successfully',
       'data': {
           'investor_id': mockedPlan.investor_id,
           'plan_id': mockedPlan.id,
@@ -318,7 +318,7 @@ describe('POST /create-plan - ...', () => {
     .expect('Content-Type', /json/)
     .expect({
       status: 'error',
-      message: 'Invalid investment plan definition',
+      message: 'Investment plan is missing details, please double-check your input',
     })
   });
 
@@ -366,7 +366,7 @@ describe('POST /create-plan - ...', () => {
     .expect('Content-Type', /json/)
     .expect({
       status: 'error',
-      message: 'Could not create investment plan',
+      message: 'Sorry, we could not save your investment plan due to some technical issue.',
     })
   });
 });

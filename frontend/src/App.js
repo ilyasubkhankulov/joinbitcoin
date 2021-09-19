@@ -16,6 +16,7 @@ function App() {
         <Route path="/" element={<Dashboard />} />
         <Route path="/account" element={<LinkAccount />} />
         <Route path="/invest" element={<Invest />} />
+        <Route path="/about" element={<Dashboard />} />
       </Routes>
     </BrowserRouter>
   );
